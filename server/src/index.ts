@@ -1,8 +1,11 @@
 import express from "express";
 import userRouter from "./routes/userRouter.js";
+import { connectDB } from "./config/db.js";
 
 const app = express();
 const PORT = 3000;
+connectDB();
+
 
 app.use(express.json());
 
@@ -11,7 +14,7 @@ app.get("/", (req, res) => {
 });
 
 
-app.use("/user999", userRouter);
+app.use("/users", userRouter);
 
 
 app.listen(PORT, () => {
