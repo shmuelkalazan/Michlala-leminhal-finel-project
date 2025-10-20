@@ -1,24 +1,16 @@
 import { useTranslation } from 'react-i18next';
+import I18n from './common/I18n';
 
 function App() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
-  const changeLanguage = (lng: 'en' | 'fr' | 'he' | 'es' |'ar') => {
-    i18n.changeLanguage(lng);
-  };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>{t('welcome')}</h1>
-      <p>{t('about')}</p>
+    <div>
+      {t('welcome')}
+      {/* <I18n /> */}
 
-      <div style={{ marginTop: '20px' }}>
-        <button onClick={() => changeLanguage('en')}>English</button>
-        <button onClick={() => changeLanguage('he')}>עברית</button>
-        <button onClick={() => changeLanguage('fr')}>Français</button>
-        <button onClick={() => changeLanguage('es')}>Español</button>
-        <button onClick={() => changeLanguage('ar')}>العربية</button>
-      </div>
+
     </div>
   );
 }
