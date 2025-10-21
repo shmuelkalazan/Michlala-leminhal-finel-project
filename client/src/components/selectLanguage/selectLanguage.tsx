@@ -1,11 +1,11 @@
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import I18n from '../I18n/I18n';
 import { useState } from 'react';
 import styles from "./selectLanguage.module.scss";
 
 
 const selectLanguage = () => {
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     
     return (
