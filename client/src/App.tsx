@@ -1,18 +1,11 @@
-import { useTranslation } from 'react-i18next';
-import SelectLanguage from './components/selectLanguage/selectLanguage';
 import styles from "./App.module.scss";
+import HeaderPage from './components/headerPage/headerPage';
 
 const App = () => {
-  const { t } = useTranslation();
-
 
   return (
     <div className={styles.app}>
-      {t('welcome')}
-      {/* <img src="../../i" alt="" />
-      <I18n /> */}
-      <SelectLanguage />
-
+      <HeaderPage />
     </div>
   );
 }
