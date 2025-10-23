@@ -1,0 +1,40 @@
+.nav {
+  position: absolute;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%); 
+  display: flex;
+  gap: 2rem;
+}
+
+.navItem {
+  position: relative;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+  text-decoration: none; 
+  font-size: 20px;
+  &:hover {
+    color: #ffeb3b;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 5px;
+    width: 0%;
+    height: 2px;
+    background-color: #ffeb3b;
+    transition: width 0.3s ease;
+  }
+
+  &.active::after {
+    width: 100%;
+    
+  }
+}

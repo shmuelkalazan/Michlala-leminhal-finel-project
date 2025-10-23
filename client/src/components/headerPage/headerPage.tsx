@@ -1,17 +1,15 @@
-import { useTranslation } from 'react-i18next';
 import styles from "./headerPage.module.scss";
-import SelectLanguage from '../selectLanguage/selectLanguage';
+import SelectLanguage from "../selectLanguage/selectLanguage";
+import HeaderNavbar from "../headerNavbar/HeaderNavbar";
 
-const headerPage = () => {
-  const { t } = useTranslation();
-
-
+const HeaderPage = () => {
   return (
-    <div className={styles.headerPageContainer}>
+    <header className={styles.headerPageContainer}>
       <SelectLanguage />
-      {t('welcome')}
-    </div>
+      <HeaderNavbar />
+    </header>
   );
-}
+};
 
-export default headerPage;
+export default HeaderPage;
+

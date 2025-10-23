@@ -1,4 +1,7 @@
 {
-    "welcome": "Welcome to my website",
-    "about": "About us"
+  "welcome": "Welcome to my website",
+  "home": "Home",
+  "about": "About us",
+  "services": "Services",
+  "contact": "Contact"
 }
