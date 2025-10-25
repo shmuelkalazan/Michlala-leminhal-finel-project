@@ -1,35 +1,119 @@
 import { User, IUser } from "../models/user.js";
+import { Lesson } from "../models/lessons.js";
 import bcrypt from "bcrypt";
+import mongoose from "mongoose";
 
 export const createUser = async (data: {
   name: string;
   email: string;
   password: string;
+  role?: string;
 }): Promise<IUser> => {
   const hashedPassword = await bcrypt.hash(data.password, 10);
-  const user = new User({ ...data, role: "user", password: hashedPassword });
+  const user = new User({
+    ...data,
+    role: data.role || "user",
+    password: hashedPassword,
+  });
   return await user.save();
 };
 
 export const getAllUsers = async (): Promise<IUser[]> => {
-  return await User.find();
+  return await User.find().populate("lessons", "name date time type");
 };
 
 export const getUserById = async (id: string): Promise<IUser | null> => {
-  return await User.findById(id);
+  if (!mongoose.Types.ObjectId.isValid(id)) return null;
+  return await User.findById(id).populate("lessons", "name date time type");
 };
+
+export const updateUser = async (
+  id: string,
+  updates: Partial<IUser>
+): Promise<IUser | null> => {
+  if (!mongoose.Types.ObjectId.isValid(id)) return null;
+  if (updates.password) {
+    updates.password = await bcrypt.hash(updates.password, 10);
+  }
+
+  return await User.findByIdAndUpdate(id, updates, { new: true });
+};
+
+export const deleteUser = async (id: string): Promise<IUser | null> => {
+  if (!mongoose.Types.ObjectId.isValid(id)) return null;
+
+  const user = await User.findById(id);
+  if (!user) return null;
+
+  if (user.lessons && user.lessons.length > 0) {
+    await Lesson.updateMany(
+      { _id: { $in: user.lessons } },
+      { $pull: { students: user._id } }
+    );
+  }
+
+  return await User.findByIdAndDelete(id);
+};
+
 
 export const loginUser = async (
   email: string,
   password: string
 ): Promise<IUser | null> => {
   const user = await User.findOne({ email });
-  console.log(user);
-
   if (!user) return null;
-
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return null;
-
   return user;
+};
+
+export const addLessonToUser = async (
+  userId: string,
+  lessonId: string
+): Promise<IUser | null> => {
+  console.log(userId);
+  if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(lessonId)) {
+    return null;
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $addToSet: { lessons: lessonId } },
+    { new: true }
+  );
+
+  if (updatedUser) {
+    await Lesson.findByIdAndUpdate(
+      lessonId,
+      { $addToSet: { students: userId } },
+      { new: true }
+    );
+  }
+
+  return updatedUser;
+};
+
+export const removeLessonFromUser = async (
+  userId: string,
+  lessonId: string
+): Promise<IUser | null> => {
+  if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(lessonId)) {
+    return null;
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $pull: { lessons: lessonId } },
+    { new: true }
+  );
+
+  if (updatedUser) {
+    await Lesson.findByIdAndUpdate(
+      lessonId,
+      { $pull: { students: userId } },
+      { new: true }
+    );
+  }
+
+  return updatedUser;
 };

@@ -1,5 +1,6 @@
 import express from "express";
 import userRouter from "./routes/userRouter.js";
+import lessonRouter from "./routes/lessonsRouter.js"
 import { connectDB } from "./config/db.js";
 import dotenv from "dotenv";
 
@@ -12,12 +13,8 @@ connectDB();
 
 app.use(express.json());
 
-// app.get("/", (req, res) => {
-//   res.send("Hello, TypeScript + Node.js Server!");
-// });
-
-
 app.use("/users", userRouter);
+app.use("/lessons", lessonRouter);
 
 
 app.listen(PORT, () => {
