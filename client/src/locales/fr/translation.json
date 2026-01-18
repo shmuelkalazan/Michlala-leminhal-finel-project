@@ -1,4 +1,14 @@
 {
-    "welcome": "Bienvenue sur mon site",
-    "about": "À propos de nous"
-}
+    "welcome": "Bienvenue sur mon site web",
+    "home": "Accueil",
+    "about": "À propos de nous",
+    "services": "Services",
+    "contact": "Contact",
+    "lessons": "Leçons",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "S'inscrire",
+    "profile": "Profil",
+    "dashboard": "Tableau de bord"
+  }
+  

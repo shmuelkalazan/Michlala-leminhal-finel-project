@@ -71,7 +71,6 @@ export const addLessonToUser = async (
   userId: string,
   lessonId: string
 ): Promise<IUser | null> => {
-  console.log(userId);
   if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(lessonId)) {
     return null;
   }
@@ -81,7 +80,6 @@ export const addLessonToUser = async (
     { $addToSet: { lessons: lessonId } },
     { new: true }
   );
-
   if (updatedUser) {
     await Lesson.findByIdAndUpdate(
       lessonId,
