@@ -26,6 +26,8 @@ export const getUser = async (req: Request, res: Response) => {
 export const createUserController = async (req: Request, res: Response) => {
   try {
     const { name, email, password, role } = req.body;
+    console.log({ name, email, password, role });
+    
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Name, email, and password are required" });
     }

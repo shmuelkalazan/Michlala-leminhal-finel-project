@@ -1,0 +1,86 @@
+.loginPage {
+  height: 100vh;
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0.75)
+    ),
+    url("../../assets/gym-bg.jpg") center / cover no-repeat;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginCard {
+  background: #1c1c1c;
+  width: 380px;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  color: #fff;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 24px;
+}
+
+.inputGroup {
+  margin-bottom: 16px;
+
+  input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #2b2b2b;
+    color: #fff;
+    font-size: 14px;
+
+    &::placeholder {
+      color: #aaa;
+    }
+  }
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+.forgot {
+  color: #f5c518;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #f5c518, #ffdd55);
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.register {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #ccc;
+
+  span {
+    color: #f5c518;
+    cursor: pointer;
+    font-weight: bold;
+  }
+}

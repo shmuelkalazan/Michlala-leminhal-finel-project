@@ -1,2 +1,5 @@
-const Contact = () => <h1>Contact Page</h1>;
+import Login from "./Login/Login";
+
+const Contact = () => <Login/>;
+
 export default Contact;
