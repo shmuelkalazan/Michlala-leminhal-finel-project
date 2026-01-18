@@ -1,4 +1,4 @@
-.homePage {
+.aboutPage {
   min-height: 100vh;
   background: #1a1a1a;
   color: #ffffff;
@@ -21,45 +21,7 @@
 .intro {
   font-size: 16px;
   color: #cccccc;
-  margin-bottom: 40px;
-}
-
-.heroCard {
-  background: #222;
-  padding: 28px;
-  border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  text-align: left;
-  margin-bottom: 40px;
-
-  h2 {
-    font-size: 22px;
-    margin-bottom: 12px;
-    color: #f5c518;
-  }
-
-  p {
-    font-size: 14px;
-    color: #ddd;
-    line-height: 1.6;
-    margin-bottom: 18px;
-  }
-
-  .ctaBtn {
-    background: #f5c518;
-    color: #111;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 12px;
-    font-size: 14px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: transform 0.2s ease;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
-  }
+  margin-bottom: 50px;
 }
 
 .sections {
