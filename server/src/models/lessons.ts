@@ -1,23 +1,29 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface ILesson extends Document {
-  name: string;
+  title: string;
+  description?: string;
   coachName: string;
   coachId: mongoose.Types.ObjectId;
   date: Date;
-  time: string;
+  startTime: string;
+  endTime?: string;
   type?: string;
   students?: mongoose.Types.ObjectId[];
+  maxPatricipants?: number;
 }
 
 const LessonSchema: Schema = new Schema({
-  name: { type: String, required: true },
+  title: { type: String, required: true },
+  description: { type: String },
   coachName: { type: String, required: true },
   coachId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   date: { type: Date, required: true },
-  time: { type: String, required: true },
+  startTime: { type: String, required: true },
+  endTime: { type: String },
   type: { type: String },
   students: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  maxPatricipants: { type: Number },
 });
 
 export const Lesson = mongoose.model<ILesson>("Lesson", LessonSchema);
