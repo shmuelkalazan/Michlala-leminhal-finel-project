@@ -3,5 +3,11 @@
   "home": "Home",
   "about": "About us",
   "services": "Services",
-  "contact": "Contact"
+  "contact": "Contact",
+  "lessons": "Lessons",
+  "login": "Login",
+  "logout": "Logout",
+  "register": "Register",
+  "profile": "Profile",
+  "dashboard": "Dashboard"
 }

@@ -1,49 +1,62 @@
-import { getAllUsers, getUserById, loginUser } from "../services/userServic.js";
 import { Request, Response } from "express";
-import { createUser } from "../services/userServic.js";
-
-export const createUserController = async (req: Request, res: Response) => {
-  try {
-    const { name, email, password } = req.body;
-
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: "Name email and password are required" });
-    }
-
-    const user = await createUser({ name, email, password });
-    res.status(201).json(user);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-};
+import * as userService from "../services/userServic.js";
+import mongoose from "mongoose";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const users = await getAllUsers();
-    res.json(users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    const users = await userService.getAllUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching users", error });
   }
 };
 
 export const getUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    if (!id) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
+    if (!id) return res.status(400).json({ message: "User ID is required" });
+    const user = await userService.getUserById(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user", error });
+  }
+};
 
-    const user = await getUserById(id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+export const createUserController = async (req: Request, res: Response) => {
+  try {
+    const { name, email, password, role } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Name, email, and password are required" });
     }
+    const newUser = await userService.createUser({ name, email, password, role });
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ message: "Error creating user", error });
+  }
+};
 
-    res.json(user);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+export const updateUserController = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ message: "User ID is required" });
+    const updatedUser = await userService.updateUser(id, req.body);
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating user", error });
+  }
+};
+
+export const deleteUserController = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ message: "User ID is required" });
+    const deletedUser = await userService.deleteUser(id);
+    if (!deletedUser) return res.status(404).json({ message: "User not found" });
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting user", error });
   }
 };
 
@@ -53,15 +66,36 @@ export const loginController = async (req: Request, res: Response) => {
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
+    const user = await userService.loginUser(email, password);
+    if (!user) return res.status(401).json({ message: "Invalid email or password" });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Error logging in", error });
+  }
+};
 
-    const user = await loginUser(email, password);
-    if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
+export const addLessonController = async (req: Request, res: Response) => {
+  try {
+    const { userId, lessonId } = req.body;
+    if (!userId || !lessonId) return res.status(400).json({ message: "userId and lessonId are required" });    
+    const updatedUser = await userService.addLessonToUser(userId, lessonId);
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: "Error adding lesson to user", error });
+  }
+};
 
-    res.json({ message: "Login successful", user: { id: user._id, name: user.name, email: user.email } });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+export const removeLessonController = async (req: Request, res: Response) => {
+  try {
+    const { userId, lessonId } = req.body;
+    if (!userId || !lessonId) return res.status(400).json({ message: "userId and lessonId are required" });
+
+    const updatedUser = await userService.removeLessonFromUser(userId, lessonId);
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: "Error removing lesson from user", error });
   }
 };

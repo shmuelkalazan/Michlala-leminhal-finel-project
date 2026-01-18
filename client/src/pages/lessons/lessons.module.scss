@@ -1,0 +1,86 @@
+.lessonsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 2rem;
+    color: #333;
+  }
+  
+  .lessonCard {
+    background-color: #ffeb3b;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.2s ease;
+    border: 1px solid #e0e0e0;
+    flex: 1 1 280px;
+    max-width: 360px;
+  
+    &:hover {
+      transform: translateY(-4px);
+    }
+  }
+  
+  .lessonHeader {
+    background-color: #ffeb3b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .lessonTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .lessonType {
+    background: #f0f0f0;
+    color: #333;
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+  }
+  
+  .lessonInfo {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  
+    p {
+      margin: 0.25rem 0;
+    }
+  }
+  
+  .lessonStudents {
+    font-size: 0.9rem;
+  
+    ul {
+      margin-top: 0.25rem;
+      padding-left: 1.25rem;
+  
+      li {
+        list-style-type: disc;
+        margin: 0.15rem 0;
+      }
+    }
+  }
+  
+  .noStudents {
+    color: #888;
+    margin-top: 0.25rem;
+  }
+  
+  .lessonsLoading,
+  .lessonsError {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.1rem;
+  }
+  
+  .lessonsError {
+    color: #c00;
+  }
+  

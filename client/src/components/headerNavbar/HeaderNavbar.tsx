@@ -11,8 +11,8 @@ const HeaderNavbar = () => {
   const navItems = [
     { id: "home", label: t("home"), path: "/" },
     { id: "about", label: t("about"), path: "/about" },
-    { id: "services", label: t("services"), path: "/services" },
-    { id: "contact", label: t("contact"), path: "/contact" },
+    { id: "lessons", label: t("lessons"), path: "/lessons" },
+    { id: "contact", label: t("login"), path: "/contact" },
   ];
 
   useEffect(() => {
