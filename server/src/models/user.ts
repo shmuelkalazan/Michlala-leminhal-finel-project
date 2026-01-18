@@ -6,6 +6,9 @@ export interface IUser extends Document {
   password: string;
   role: string;
   lessons?: mongoose.Types.ObjectId[];
+  preferredLanguege?: string;
+  registrationDate?: Date;
+  isPayed?: Boolean;
 }
 
 const UserSchema: Schema = new Schema({
@@ -13,6 +16,9 @@ const UserSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, required: true },
+  preferredLanguege: { type: String, default: "en" },
+  registrationDate: { type: Date },
+  isPayed: { type: Boolean, default: false },
   lessons: [{ type: Schema.Types.ObjectId, ref: "Lesson" }],
 });
 
