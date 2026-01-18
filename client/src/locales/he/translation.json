@@ -1,7 +1,13 @@
 {
-  "welcome": "ברוכים הבאים לאתר שלי",
-  "home": "בית",
+  "welcome": "ברוך הבא לאתר שלי",
+  "home": "דף הבית",
   "about": "עלינו",
   "services": "שירותים",
-  "contact": "צור קשר"
+  "contact": "צור קשר",
+  "lessons": "שיעורים",
+  "login": "התחבר",
+  "logout": "התנתק",
+  "register": "הרשמה",
+  "profile": "פרופיל",
+  "dashboard": "לוח בקרה"
 }
