@@ -11,7 +11,9 @@ export const getBranches = async (_req: Request, res: Response) => {
 
 export const getBranch = async (req: Request, res: Response) => {
   try {
-    const branch = await branchService.getBranchById(req.params.id);
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ message: "Branch ID is required" });
+    const branch = await branchService.getBranchById(id);
     if (!branch) return res.status(404).json({ message: "Branch not found" });
     res.status(200).json(branch);
   } catch (e) {
@@ -31,7 +33,9 @@ export const createBranchController = async (req: Request, res: Response) => {
 
 export const updateBranchController = async (req: Request, res: Response) => {
   try {
-    const updated = await branchService.updateBranch(req.params.id, req.body);
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ message: "Branch ID is required" });
+    const updated = await branchService.updateBranch(id, req.body);
     if (!updated) return res.status(404).json({ message: "Branch not found" });
     res.status(200).json(updated);
   } catch (e) {
@@ -41,7 +45,9 @@ export const updateBranchController = async (req: Request, res: Response) => {
 
 export const deleteBranchController = async (req: Request, res: Response) => {
   try {
-    const deleted = await branchService.deleteBranch(req.params.id);
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ message: "Branch ID is required" });
+    const deleted = await branchService.deleteBranch(id);
     if (!deleted) return res.status(404).json({ message: "Branch not found" });
     res.status(200).json({ message: "Branch deleted" });
   } catch (e) {
