@@ -69,14 +69,20 @@ const Lessons: React.FC = () => {
               <p><strong>{t("date")}:</strong> {new Date(lesson.date).toLocaleDateString()}</p>
               <p><strong>{t("time")}:</strong> {lesson.startTime || lesson.time}</p>
             </div>
-            <div className={styles.lessonStudents}>
-              <strong>{t("students")}:</strong>
-              {lesson.students && lesson.students.length > 0 ? (
-                <ul>{lesson.students.map((s: Student) => <li key={s._id}>{s.name} - {s.email}</li>)}</ul>
-              ) : (
-                <p className={styles.noStudents}>{t("noStudentsEnrolled")}</p>
-              )}
-            </div>
+            {user && (
+              <div className={styles.lessonStudents}>
+                <strong>{t("students")}:</strong>
+                {(user.role === "trainer" || user.role === "admin") ? (
+                  lesson.students && lesson.students.length > 0 ? (
+                    <ul>{lesson.students.map((s: Student) => <li key={s._id}>{s.name} - {s.email}</li>)}</ul>
+                  ) : (
+                    <p className={styles.noStudents}>{t("noStudentsEnrolled")}</p>
+                  )
+                ) : (
+                  <span> {lesson.students?.length || 0}</span>
+                )}
+              </div>
+            )}
             {isUser && (
               <button className={styles.loginBtn} onClick={() => handleToggle(lesson._id, enrolled)} disabled={busyId === lesson._id}>
                 {busyId === lesson._id ? t("saving") : enrolled ? t("cancelRegistration") : t("registerBtn")}

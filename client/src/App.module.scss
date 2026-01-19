@@ -6,45 +6,54 @@ body, html {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
   color: #cccccc;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   height: 100%;
   width: 100%;
+  
+  // Hide scrollbar but keep scrolling functionality
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE and Edge
+  
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
 }
 
 .app {
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   background-color: #2b2b2b;
   margin: 0;
   padding: 20px;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-}
-
-.headerPageContainer {
-  display: flex;
-  width: 100%;
-  height: 70px;
-  max-height: 70px;
-  align-items: center;
-  border-radius: 20px;
-  background-color: #525252e0;
 }
 
 .main {
   text-align: center;
-  margin-top: 2rem;
+  margin-top: calc(70px + 2rem + 20px); // Header height + margin-top + padding
   color: #fff;
   flex: 1;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  height: calc(100vh - 70px - 2rem - 40px);
+  min-height: calc(100vh - 70px - 2rem - 40px);
+  
+  // Hide scrollbar but keep scrolling functionality
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE and Edge
+  
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
   
   > * {
-    height: 100%;
-    overflow: hidden;
+    width: 100%;
+    overflow-x: hidden;
   }
 }

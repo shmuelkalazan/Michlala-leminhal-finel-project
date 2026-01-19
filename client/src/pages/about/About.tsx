@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import Map from "../../components/Map/Map";
 import styles from "./about.module.scss";
 
 const About: React.FC = () => {
@@ -41,6 +42,10 @@ const About: React.FC = () => {
               {t("cleanSafeText")}
             </p>
           </div>
+        </div>
+
+        <div className={styles.mapSection}>
+          <Map />
         </div>
       </div>
     </div>
