@@ -94,5 +94,10 @@
   "equipmentText": "Notre salle de sport est équipée de machines et d'outils d'entraînement de pointe pour assurer des entraînements efficaces et agréables.",
   "cleanSafe": "Environnement propre et sûr",
   "cleanSafeText": "La propreté et la sécurité sont nos priorités absolues, garantissant une expérience confortable pour tous les membres.",
-  "backToDashboard": "Retour au tableau de bord"
+  "backToDashboard": "Retour au tableau de bord",
+  "languageEnglish": "English",
+  "languageHebrew": "עברית",
+  "languageFrench": "Français",
+  "languageSpanish": "Español",
+  "languageArabic": "العربية"
 }

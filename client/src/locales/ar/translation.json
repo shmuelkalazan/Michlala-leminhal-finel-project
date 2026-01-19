@@ -94,5 +94,10 @@
   "equipmentText": "صالة الألعاب الرياضية لدينا مجهزة بأحدث الآلات وأدوات التدريب لضمان تمارين فعالة وممتعة.",
   "cleanSafe": "بيئة نظيفة وآمنة",
   "cleanSafeText": "النظافة والسلامة هي أولوياتنا القصوى، مما يضمن تجربة مريحة لجميع الأعضاء.",
-  "backToDashboard": "العودة إلى لوحة التحكم"
+  "backToDashboard": "العودة إلى لوحة التحكم",
+  "languageEnglish": "English",
+  "languageHebrew": "עברית",
+  "languageFrench": "Français",
+  "languageSpanish": "Español",
+  "languageArabic": "العربية"
 }

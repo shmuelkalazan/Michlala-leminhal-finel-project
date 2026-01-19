@@ -6,7 +6,7 @@ import styles from './I18n.module.scss';
 const BASE = "http://localhost:3000";
 
 const I18n = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const user = useAtomValue(authUserAtom);
   const setUser = useSetAtom(authUserAtom);
   const setCurrentLanguage = useSetAtom(currentLanguageAtom);
@@ -25,7 +25,6 @@ const I18n = () => {
           setUser({ ...user, preferredLanguage: lng });
         }
       } catch (e) {
-        console.error("Failed to update language", e);
       }
     }
   };
@@ -37,11 +36,11 @@ const I18n = () => {
         onChange={(e) => changeLanguage(e.target.value)}
         className={styles.select}
       >
-        <option value="en">English</option>
-        <option value="he">עברית</option>
-        <option value="fr">Français</option>
-        <option value="es">Español</option>
-        <option value="ar">العربية</option>
+        <option value="en">{t("languageEnglish")}</option>
+        <option value="he">{t("languageHebrew")}</option>
+        <option value="fr">{t("languageFrench")}</option>
+        <option value="es">{t("languageSpanish")}</option>
+        <option value="ar">{t("languageArabic")}</option>
       </select>
     </div>
   );

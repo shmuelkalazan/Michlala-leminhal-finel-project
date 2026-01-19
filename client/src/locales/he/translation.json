@@ -94,5 +94,10 @@
   "equipmentText": "חדר הכושר שלנו מצויד במכונות וכלי אימון מתקדמים כדי להבטיח אימונים יעילים ומהנים.",
   "cleanSafe": "סביבה נקייה ובטוחה",
   "cleanSafeText": "ניקיון ובטיחות הם העדיפויות העליונות שלנו, ומבטיחים חוויה נוחה לכל החברים.",
-  "backToDashboard": "חזרה לדשבורד"
+  "backToDashboard": "חזרה לדשבורד",
+  "languageEnglish": "English",
+  "languageHebrew": "עברית",
+  "languageFrench": "Français",
+  "languageSpanish": "Español",
+  "languageArabic": "العربية"
 }

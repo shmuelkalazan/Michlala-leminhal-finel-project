@@ -94,5 +94,10 @@
   "equipmentText": "Our gym is equipped with state-of-the-art machines and training tools to ensure effective and enjoyable workouts.",
   "cleanSafe": "Clean & Safe Environment",
   "cleanSafeText": "Cleanliness and safety are our top priorities, ensuring a comfortable experience for all members.",
-  "backToDashboard": "Back to Dashboard"
+  "backToDashboard": "Back to Dashboard",
+  "languageEnglish": "English",
+  "languageHebrew": "עברית",
+  "languageFrench": "Français",
+  "languageSpanish": "Español",
+  "languageArabic": "العربية"
 }

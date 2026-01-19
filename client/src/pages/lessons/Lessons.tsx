@@ -72,7 +72,7 @@ const Lessons: React.FC = () => {
             <div className={styles.lessonStudents}>
               <strong>{t("students")}:</strong>
               {lesson.students && lesson.students.length > 0 ? (
-                <ul>{lesson.students.map((s: Student) => <li key={s._id}>{s.name} – {s.email}</li>)}</ul>
+                <ul>{lesson.students.map((s: Student) => <li key={s._id}>{s.name} - {s.email}</li>)}</ul>
               ) : (
                 <p className={styles.noStudents}>{t("noStudentsEnrolled")}</p>
               )}

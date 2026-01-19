@@ -94,5 +94,10 @@
   "equipmentText": "Nuestro gimnasio está equipado con máquinas y herramientas de entrenamiento de última generación para garantizar entrenamientos efectivos y agradables.",
   "cleanSafe": "Ambiente limpio y seguro",
   "cleanSafeText": "La limpieza y la seguridad son nuestras principales prioridades, garantizando una experiencia cómoda para todos los miembros.",
-  "backToDashboard": "Volver al panel de control"
+  "backToDashboard": "Volver al panel de control",
+  "languageEnglish": "English",
+  "languageHebrew": "עברית",
+  "languageFrench": "Français",
+  "languageSpanish": "Español",
+  "languageArabic": "العربية"
 }
