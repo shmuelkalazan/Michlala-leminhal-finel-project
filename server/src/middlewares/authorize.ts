@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-export const authorize = (...allowedRoles: Array<"admin" | "coach" | "student">) => {
+export const authorize = (...allowedRoles: Array<"admin" | "trainer" | "user">) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
 

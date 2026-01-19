@@ -2,6 +2,22 @@ import { User, IUser } from "../models/user.js";
 import { Lesson } from "../models/lessons.js";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
+import { AppError } from "../utils/appError.js";
+
+export type AuthUser = {
+  id?: string;
+  name: string;
+  email: string;
+  role: IUser["role"];
+};
+
+const normalizeEmail = (email: string) => email.trim().toLowerCase();
+
+const toAuthUser = (user: IUser): AuthUser => ({
+  name: user.name,
+  email: user.email,
+  role: user.role,
+});
 
 export const createUser = async (data: {
   name: string;
@@ -12,10 +28,34 @@ export const createUser = async (data: {
   const hashedPassword = await bcrypt.hash(data.password, 10);
   const user = new User({
     ...data,
-    role: data.role || "user",
+    role: (data.role as IUser["role"]) || "user",
     password: hashedPassword,
   });
   return await user.save();
+};
+
+export const registerUser = async (data: {
+  name: string;
+  email: string;
+  password: string;
+  role?: IUser["role"];
+}): Promise<AuthUser> => {
+  const email = normalizeEmail(data.email);
+  const existing = await User.findOne({ email });
+  if (existing) {
+    throw new AppError("Email already registered", 409);
+  }
+
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+  const user = new User({
+    ...data,
+    email,
+    role: data.role || "user",
+    password: hashedPassword,
+  });
+
+  await user.save();
+  return toAuthUser(user);
 };
 
 export const getAllUsers = async (): Promise<IUser[]> => {
@@ -60,11 +100,25 @@ export const loginUser = async (
   email: string,
   password: string
 ): Promise<IUser | null> => {
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select("+password");
   if (!user) return null;
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return null;
   return user;
+};
+
+export const authenticateUser = async (
+  email: string,
+  password: string
+): Promise<AuthUser> => {
+  const normalizedEmail = normalizeEmail(email);
+  const user = await User.findOne({ email: normalizedEmail }).select("+password");
+  if (!user) throw new AppError("Invalid email or password", 401);
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) throw new AppError("Invalid email or password", 401);
+
+  return toAuthUser(user);
 };
 
 export const addLessonToUser = async (
