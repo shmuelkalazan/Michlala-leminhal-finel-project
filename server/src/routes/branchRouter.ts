@@ -10,6 +10,7 @@ import {
 
 const router = Router();
 
+router.get("/public", getBranches);
 router.get("/", authorize("admin"), getBranches);
 router.get("/:id", authorize("admin"), getBranch);
 router.post("/", authorize("admin"), createBranchController);
