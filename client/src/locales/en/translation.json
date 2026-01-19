@@ -67,6 +67,7 @@
   "usersLessonCounts": "Users lesson counts",
   "users": "Users",
   "branches": "Branches",
+  "selectBranch": "Select Branch",
   "address": "Address",
   "phone": "Phone",
   "loadFailed": "Load failed",
@@ -114,5 +115,7 @@
   "weatherNetworkError": "Network error. Please check your internet connection",
   "weatherErrorHint": "Please check the console for more details or try refreshing the page",
   "locationAccessDenied": "Unable to get your location. Please allow location access in your browser.",
-  "locationPermissionHint": "You can allow location access in your browser settings"
+  "locationPermissionHint": "You can allow location access in your browser settings",
+  "latitude": "Latitude",
+  "longitude": "Longitude"
 }

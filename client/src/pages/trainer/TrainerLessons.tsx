@@ -3,15 +3,19 @@ import { useTranslation } from "react-i18next";
 import { useAtomValue } from "jotai";
 import { authUserAtom } from "../../state/authAtom";
 import { createLesson, deleteLesson, fetchLessons, updateLesson } from "../../api/lessons";
-import { Lesson } from "../../types/interface";
+import { fetchBranches } from "../../api/branches";
+import { Lesson, Branch } from "../../types/interface";
+import TimeSelector from "../../components/TimeSelector/TimeSelector";
 import styles from "./TrainerLessons.module.scss";
 
 const TrainerLessons = () => {
   const { t } = useTranslation();
   const user = useAtomValue(authUserAtom);
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [form, setForm] = useState({ title: "", date: "", startTime: "", type: "" });
-  const [editId, setEditId] = useState<string | null>(null); const [error, setError] = useState("");
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [form, setForm] = useState({ title: "", date: "", startTime: "", type: "", branchId: "" });
+  const [editId, setEditId] = useState<string | null>(null);
+  const [error, setError] = useState("");
   const getCoachId = (l: Lesson) => (typeof l.coachId === "string" ? l.coachId : (l as any).coachId?._id);
   const isPast = (l: Lesson) => {
     const d = new Date(l.date as any);
@@ -21,12 +25,23 @@ const TrainerLessons = () => {
 
   useEffect(() => {
     if (user?.role !== "trainer") return setError(t("trainerAccessRequired"));
-    fetchLessons().then((d) => setLessons(d.filter((l) => getCoachId(l) === user.id))).catch((e) => setError(e.message || t("loadFailed")));
+    
+    Promise.all([
+      fetchLessons(),
+      fetchBranches()
+    ])
+      .then(([lessonsData, branchesData]) => {
+        setLessons(lessonsData.filter((l) => getCoachId(l) === user.id));
+        setBranches(branchesData);
+      })
+      .catch((e) => setError(e.message || t("loadFailed")));
   }, [user, t]);
 
   const handleSave = async () => {
     if (!user?.id || user.role !== "trainer") return setError(t("trainerAccessRequired"));
-    if (!form.title || !form.date || !form.startTime) return setError(t("fillRequiredFields"));
+    if (!form.title || !form.date || !form.startTime || !form.branchId) {
+      return setError(t("fillRequiredFields"));
+    }
     const payload = { ...form, coachId: user.id, coachName: user.name };
     try {
       if (editId) {
@@ -36,8 +51,12 @@ const TrainerLessons = () => {
         const created = await createLesson(payload, user || undefined);
         setLessons((p) => [...p, created]);
       }
-      setForm({ title: "", date: "", startTime: "", type: "" }); setEditId(null); setError("");
-    } catch (e: any) { setError(e.message || t("saveFailed")); }
+      setForm({ title: "", date: "", startTime: "", type: "", branchId: "" });
+      setEditId(null);
+      setError("");
+    } catch (e: any) {
+      setError(e.message || t("saveFailed"));
+    }
   };
 
   const handleDelete = async (id?: string) => {
@@ -56,8 +75,25 @@ const TrainerLessons = () => {
         <div className={styles.formContainer}>
           <input placeholder={t("title")} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
-          <input placeholder={t("startTime")} value={form.startTime} onChange={(e) => setForm({ ...form, startTime: e.target.value })} />
+          <TimeSelector
+            value={form.startTime}
+            onChange={(time) => setForm({ ...form, startTime: time })}
+            placeholder={t("startTime")}
+          />
           <input placeholder={t("type")} value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} />
+          <select
+            value={form.branchId}
+            onChange={(e) => setForm({ ...form, branchId: e.target.value })}
+            className={styles.select}
+            required
+          >
+            <option value="" disabled>{t("selectBranch")}</option>
+            {branches.map((branch) => (
+              <option key={branch._id} value={branch._id}>
+                {branch.name} - {branch.address}
+              </option>
+            ))}
+          </select>
           <button onClick={handleSave}>{editId ? t("update") : t("create")}</button>
         </div>
       </div>
@@ -73,7 +109,11 @@ const TrainerLessons = () => {
                 {new Date(l.date).toLocaleDateString()} {l.startTime || l.time || ""} | {t("students")}: {l.students?.length || 0}
               </span>
               <div className={styles.buttonGroup}>
-                <button className={styles.button} onClick={() => { setForm({ title: l.title || l.name || "", date: (l.date as string).slice(0,10), startTime: l.startTime || l.time || "", type: l.type || "" }); setEditId(l._id || null); }}>{t("edit")}</button>
+                <button className={styles.button} onClick={() => { 
+                  const branchId = typeof l.branchId === "string" ? l.branchId : l.branchId?._id || "";
+                  setForm({ title: l.title || l.name || "", date: (l.date as string).slice(0,10), startTime: l.startTime || l.time || "", type: l.type || "", branchId }); 
+                  setEditId(l._id || null); 
+                }}>{t("edit")}</button>
                 <button className={styles.button} onClick={() => handleDelete(l._id)}>{t("delete")}</button>
               </div>
             </li>
@@ -92,7 +132,11 @@ const TrainerLessons = () => {
                 {new Date(l.date).toLocaleDateString()} {l.startTime || l.time || ""} | {t("students")}: {l.students?.length || 0}
               </span>
               <div className={styles.buttonGroup}>
-                <button className={styles.button} onClick={() => { setForm({ title: l.title || l.name || "", date: (l.date as string).slice(0,10), startTime: l.startTime || l.time || "", type: l.type || "" }); setEditId(l._id || null); }}>{t("edit")}</button>
+                <button className={styles.button} onClick={() => { 
+                  const branchId = typeof l.branchId === "string" ? l.branchId : l.branchId?._id || "";
+                  setForm({ title: l.title || l.name || "", date: (l.date as string).slice(0,10), startTime: l.startTime || l.time || "", type: l.type || "", branchId }); 
+                  setEditId(l._id || null); 
+                }}>{t("edit")}</button>
                 <button className={styles.button} onClick={() => handleDelete(l._id)}>{t("delete")}</button>
               </div>
             </li>

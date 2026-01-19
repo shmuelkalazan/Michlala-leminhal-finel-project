@@ -67,6 +67,7 @@
   "usersLessonCounts": "Recuento de lecciones por usuario",
   "users": "Usuarios",
   "branches": "Sucursales",
+  "selectBranch": "Seleccionar Sucursal",
   "address": "Dirección",
   "phone": "Teléfono",
   "loadFailed": "Error al cargar",
@@ -114,5 +115,7 @@
   "weatherNetworkError": "Error de red. Por favor, verifica tu conexión a internet",
   "weatherErrorHint": "Por favor, verifica la consola para más detalles o intenta actualizar la página",
   "locationAccessDenied": "No se puede obtener tu ubicación. Por favor, permite el acceso a la ubicación en tu navegador.",
-  "locationPermissionHint": "Puedes permitir el acceso a la ubicación en la configuración de tu navegador"
+  "locationPermissionHint": "Puedes permitir el acceso a la ubicación en la configuración de tu navegador",
+  "latitude": "Latitud",
+  "longitude": "Longitud"
 }

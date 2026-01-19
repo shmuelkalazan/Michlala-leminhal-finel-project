@@ -3,7 +3,7 @@ import { Lesson } from "../types/interface";
 
 const BASE_URL = "http://localhost:3000";
 
-const handle = async (res: Response) => {
+const handle = async (res: globalThis.Response) => {
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || "Request failed");
   return data;

@@ -5,6 +5,7 @@ export interface ILesson extends Document {
   description?: string;
   coachName: string;
   coachId: mongoose.Types.ObjectId;
+  branchId: mongoose.Types.ObjectId;
   date: Date;
   startTime: string;
   endTime?: string;
@@ -18,6 +19,7 @@ const LessonSchema: Schema = new Schema({
   description: { type: String },
   coachName: { type: String, required: true },
   coachId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  branchId: { type: Schema.Types.ObjectId, ref: "Branch", required: true },
   date: { type: Date, required: true },
   startTime: { type: String, required: true },
   endTime: { type: String },

@@ -67,6 +67,7 @@
   "usersLessonCounts": "ספירת שיעורים למשתמשים",
   "users": "משתמשים",
   "branches": "סניפים",
+  "selectBranch": "בחר סניף",
   "address": "כתובת",
   "phone": "טלפון",
   "loadFailed": "טעינה נכשלה",
@@ -114,5 +115,7 @@
   "weatherNetworkError": "שגיאת רשת. אנא בדוק את החיבור לאינטרנט",
   "weatherErrorHint": "אנא בדוק את הקונסול לפרטים נוספים או נסה לרענן את הדף",
   "locationAccessDenied": "לא ניתן לקבל את המיקום שלך. אנא אשר גישה למיקום בדפדפן.",
-  "locationPermissionHint": "אפשר לאשר גישה למיקום בהגדרות הדפדפן"
+  "locationPermissionHint": "אפשר לאשר גישה למיקום בהגדרות הדפדפן",
+  "latitude": "קו רוחב (Latitude)",
+  "longitude": "קו אורך (Longitude)"
 }
