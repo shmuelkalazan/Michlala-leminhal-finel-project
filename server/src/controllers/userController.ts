@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as userService from "../services/userServic.js";
 import mongoose from "mongoose";
+import { AppError } from "../utils/appError.js";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -31,10 +32,13 @@ export const createUserController = async (req: Request, res: Response) => {
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Name, email, and password are required" });
     }
-    const newUser = await userService.createUser({ name, email, password, role });
+    const newUser = await userService.registerUser({ name, email, password, role });
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ message: "Error creating user", error });
+    if (error instanceof AppError) {
+      return res.status(error.status).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error creating user" });
   }
 };
 
@@ -68,11 +72,13 @@ export const loginController = async (req: Request, res: Response) => {
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
-    const user = await userService.loginUser(email, password);
-    if (!user) return res.status(401).json({ message: "Invalid email or password" });
+    const user = await userService.authenticateUser(email, password);
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: "Error logging in", error });
+    if (error instanceof AppError) {
+      return res.status(error.status).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error logging in" });
   }
 };
 

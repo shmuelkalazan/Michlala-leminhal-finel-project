@@ -5,6 +5,7 @@ import Home from "./pages/home/Home";
 import About from "./pages/about/About";
 import Contact from "./pages/contact/Contact";
 import Lessons from "./pages/lessons/Lessons";
+import Signup from "./pages/contact/Signup/Signup";
 const App = () => {
   return (
     <div className={styles.app}>
@@ -16,6 +17,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/lessons" element={<Lessons />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
         </main>
       </BrowserRouter>

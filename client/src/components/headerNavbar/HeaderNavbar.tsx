@@ -13,6 +13,7 @@ const HeaderNavbar = () => {
     { id: "about", label: t("about"), path: "/about" },
     { id: "lessons", label: t("lessons"), path: "/lessons" },
     { id: "contact", label: t("login"), path: "/contact" },
+    { id: "signup", label: t("register"), path: "/signup" },
   ];
 
   useEffect(() => {
