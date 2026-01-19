@@ -1,25 +1,27 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import styles from "./home.module.scss";
 
 const Home: React.FC = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
   return (
     <div className={styles.homePage}>
       <div className={styles.container}>
-        <h1>Welcome to Our Gym</h1>
+        <h1>{t("welcomeToGym")}</h1>
 
         <p className={styles.intro}>
-          Join our modern fitness center and start your journey to a healthier,
-          stronger, and happier you. We support every level — from beginners to
-          advanced athletes.
+          {t("joinIntro")}
         </p>
 
         <div className={styles.heroCard}>
-          <h2>Ready to start?</h2>
+          <h2>{t("readyToStart")}</h2>
           <p>
-            Sign up today and get your first week free. Experience our premium
-            equipment, professional trainers, and supportive community.
+            {t("signupToday")}
           </p>
-          <button className={styles.ctaBtn}>Join Now</button>
+          <button className={styles.ctaBtn} onClick={() => navigate("/signup")}>{t("joinNow")}</button>
         </div>
       </div>
     </div>

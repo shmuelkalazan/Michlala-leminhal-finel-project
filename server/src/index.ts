@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import userRouter from "./routes/userRouter.js";
 import lessonRouter from "./routes/lessonsRouter.js";
+import branchRouter from "./routes/branchRouter.js";
+import adminRouter from "./routes/adminRouter.js";
 import { connectDB } from "./config/db.js";
 import dotenv from "dotenv";
 
@@ -24,6 +26,8 @@ app.use(express.json());
 
 app.use("/users", userRouter);
 app.use("/lessons", lessonRouter);
+app.use("/branches", branchRouter);
+app.use("/admin", adminRouter);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);

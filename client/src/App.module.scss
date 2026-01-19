@@ -6,6 +6,9 @@ body, html {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
   color: #cccccc;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
 }
 
 .app {
@@ -14,8 +17,10 @@ body, html {
   background-color: #2b2b2b;
   margin: 0;
   padding: 20px;
-  box-sizing: border-box; /* Include padding in height/width calculations */
-  overflow: hidden; /* Prevent scrollbars if content overflows */
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .headerPageContainer {
@@ -26,4 +31,20 @@ body, html {
   align-items: center;
   border-radius: 20px;
   background-color: #525252e0;
+}
+
+.main {
+  text-align: center;
+  margin-top: 2rem;
+  color: #fff;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  
+  > * {
+    height: 100%;
+    overflow: hidden;
+  }
 }

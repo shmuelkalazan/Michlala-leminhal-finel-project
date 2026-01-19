@@ -1,9 +1,10 @@
 .homePage {
-  min-height: 100vh;
+  height: 100%;
   background: #1a1a1a;
   color: #ffffff;
-  padding: 80px 20px;
+  padding: 20px;
   font-family: "Segoe UI", sans-serif;
+  overflow: hidden;
 }
 
 .container {

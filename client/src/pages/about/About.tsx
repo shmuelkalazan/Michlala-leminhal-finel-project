@@ -1,48 +1,44 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./about.module.scss";
 
 const About: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div className={styles.aboutPage}>
       <div className={styles.container}>
-        <h1>About Our Gym</h1>
+        <h1>{t("aboutOurGym")}</h1>
 
         <p className={styles.intro}>
-          We are a modern fitness center dedicated to helping people achieve
-          their health and fitness goals in a supportive and professional
-          environment.
+          {t("aboutIntro")}
         </p>
 
         <div className={styles.sections}>
           <div className={styles.card}>
-            <h2>Our Mission</h2>
+            <h2>{t("ourMission")}</h2>
             <p>
-              Our mission is to provide a safe, motivating, and accessible
-              training space for everyone — from beginners to advanced athletes.
+              {t("missionText")}
             </p>
           </div>
 
           <div className={styles.card}>
-            <h2>Professional Training</h2>
+            <h2>{t("professionalTraining")}</h2>
             <p>
-              We offer a wide range of training programs designed to improve
-              strength, endurance, flexibility, and overall wellness.
+              {t("trainingText")}
             </p>
           </div>
 
           <div className={styles.card}>
-            <h2>Modern Equipment</h2>
+            <h2>{t("modernEquipment")}</h2>
             <p>
-              Our gym is equipped with state-of-the-art machines and training
-              tools to ensure effective and enjoyable workouts.
+              {t("equipmentText")}
             </p>
           </div>
 
           <div className={styles.card}>
-            <h2>Clean & Safe Environment</h2>
+            <h2>{t("cleanSafe")}</h2>
             <p>
-              Cleanliness and safety are our top priorities, ensuring a
-              comfortable experience for all members.
+              {t("cleanSafeText")}
             </p>
           </div>
         </div>
