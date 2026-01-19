@@ -5,18 +5,21 @@ import mongoose from "mongoose";
 import { AppError } from "../utils/appError.js";
 
 export type AuthUser = {
-  id?: string;
+  id: string;
   name: string;
   email: string;
   role: IUser["role"];
+  preferredLanguage?: string;
 };
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
 const toAuthUser = (user: IUser): AuthUser => ({
+  id: user._id.toString(),
   name: user.name,
   email: user.email,
   role: user.role,
+  preferredLanguage: user.preferredLanguege || "en",
 });
 
 export const createUser = async (data: {
@@ -77,6 +80,22 @@ export const updateUser = async (
   }
 
   return await User.findByIdAndUpdate(id, updates, { new: true });
+};
+
+export const setUserRole = async (
+  id: string,
+  role: IUser["role"]
+): Promise<IUser | null> => {
+  if (!mongoose.Types.ObjectId.isValid(id)) return null;
+  return User.findByIdAndUpdate(id, { role }, { new: true });
+};
+
+export const setUserLanguage = async (
+  id: string,
+  language: string
+): Promise<IUser | null> => {
+  if (!mongoose.Types.ObjectId.isValid(id)) return null;
+  return User.findByIdAndUpdate(id, { preferredLanguege: language }, { new: true });
 };
 
 export const deleteUser = async (id: string): Promise<IUser | null> => {

@@ -107,3 +107,31 @@ export const removeLessonController = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error removing lesson from user", error });
   }
 };
+
+export const setUserRoleController = async (req: Request, res: Response) => {
+  try {
+    const { role } = req.body;
+    if (!role) return res.status(400).json({ message: "role is required" });
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ message: "User ID is required" });
+    const updated = await userService.setUserRole(id, role);
+    if (!updated) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(updated);
+  } catch (e) {
+    res.status(500).json({ message: "Error updating role" });
+  }
+};
+
+export const setUserLanguageController = async (req: Request, res: Response) => {
+  try {
+    const { language } = req.body;
+    if (!language) return res.status(400).json({ message: "language is required" });
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ message: "User ID is required" });
+    const updated = await userService.setUserLanguage(id, language);
+    if (!updated) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(updated);
+  } catch (e) {
+    res.status(500).json({ message: "Error updating language" });
+  }
+};

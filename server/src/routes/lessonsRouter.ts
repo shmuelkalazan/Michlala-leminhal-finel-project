@@ -13,10 +13,8 @@ const router = Router();
 router.get("/", getLessons);
 router.get("/:id", getLesson);
 
-router.post("/",  authorize("admin", "coach"), createLessonController);
-
-router.put("/:id",  authorize("admin", "coach"), updateLessonController);
-
-router.delete("/:id",  authorize("admin"), deleteLessonController);
+router.post("/",  authorize("admin", "trainer"), createLessonController);
+router.put("/:id",  authorize("admin", "trainer"), updateLessonController);
+router.delete("/:id",  authorize("admin", "trainer"), deleteLessonController);
 
 export default router;

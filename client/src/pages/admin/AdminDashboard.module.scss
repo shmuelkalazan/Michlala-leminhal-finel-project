@@ -1,0 +1,116 @@
+.container {
+  color: #fff;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+  overflow: hidden;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  text-align: center;
+}
+
+.error {
+  color: #f56565;
+  background: rgba(245, 101, 101, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(245, 101, 101, 0.3);
+}
+
+.loading {
+  color: #fff;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+.linksContainer {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.link {
+  color: #f5c518;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  background: #1c1c1c;
+  border-radius: 8px;
+  border: 1px solid #3a3a3a;
+  transition: all 0.2s ease;
+  font-weight: 500;
+
+  &:hover {
+    background: #2b2b2b;
+    border-color: #f5c518;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 197, 24, 0.3);
+  }
+}
+
+.statsCard {
+  background: #1c1c1c;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #3a3a3a;
+  text-align: center;
+}
+
+.statsText {
+  font-size: 1.1rem;
+  color: #ccc;
+  margin: 0;
+
+  strong {
+    color: #f5c518;
+  }
+}
+
+.sectionCard {
+  background: #1c1c1c;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #3a3a3a;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #f5c518;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #3a3a3a;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: #2b2b2b;
+    border-radius: 8px;
+    border: 1px solid #3a3a3a;
+    color: #ccc;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #f5c518;
+      transform: translateX(4px);
+    }
+  }
+}

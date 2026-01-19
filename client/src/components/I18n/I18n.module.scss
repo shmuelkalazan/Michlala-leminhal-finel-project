@@ -1,2 +1,30 @@
-.select{
+.select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #3a3a3a;
+  background: #1c1c1c;
+  color: #fff;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+
+  /* visual only (no layout/position changes) */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.select:hover {
+  border-color: #f5c518;
+  background: #242424;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #f5c518;
+  box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.18), 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.select option {
+  background: #1c1c1c;
+  color: #fff;
 }
