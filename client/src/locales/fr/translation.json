@@ -99,5 +99,20 @@
   "languageHebrew": "עברית",
   "languageFrench": "Français",
   "languageSpanish": "Español",
-  "languageArabic": "العربية"
+  "languageArabic": "العربية",
+  "currentWeather": "Météo Actuelle",
+  "feelsLike": "Ressenti",
+  "humidity": "Humidité",
+  "windSpeed": "Vitesse du Vent",
+  "kmh": "km/h",
+  "weatherApiKeyNotSet": "La clé API n'est pas définie. Veuillez ajouter VITE_WEATHER_API_KEY au fichier .env",
+  "browserNotSupportLocation": "Votre navigateur ne prend pas en charge la localisation",
+  "weatherLoadError": "Erreur lors du chargement des données météorologiques",
+  "weatherApiKeyInvalid": "Clé API invalide. Veuillez vérifier votre clé API",
+  "weatherApiKeyCheckHint": "Assurez-vous que la clé API est activée dans votre compte OpenWeatherMap (peut prendre quelques minutes)",
+  "weatherApiRateLimit": "Limite de débit dépassée. Veuillez réessayer plus tard",
+  "weatherNetworkError": "Erreur réseau. Veuillez vérifier votre connexion Internet",
+  "weatherErrorHint": "Veuillez vérifier la console pour plus de détails ou essayez d'actualiser la page",
+  "locationAccessDenied": "Impossible d'obtenir votre localisation. Veuillez autoriser l'accès à la localisation dans votre navigateur.",
+  "locationPermissionHint": "Vous pouvez autoriser l'accès à la localisation dans les paramètres de votre navigateur"
 }

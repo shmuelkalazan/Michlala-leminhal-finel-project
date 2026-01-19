@@ -99,5 +99,20 @@
   "languageHebrew": "עברית",
   "languageFrench": "Français",
   "languageSpanish": "Español",
-  "languageArabic": "العربية"
+  "languageArabic": "العربية",
+  "currentWeather": "Current Weather",
+  "feelsLike": "Feels like",
+  "humidity": "Humidity",
+  "windSpeed": "Wind Speed",
+  "kmh": "km/h",
+  "weatherApiKeyNotSet": "API key is not set. Please add VITE_WEATHER_API_KEY to the .env file",
+  "browserNotSupportLocation": "Your browser does not support location",
+  "weatherLoadError": "Error loading weather data",
+  "weatherApiKeyInvalid": "Invalid API key. Please check your API key",
+  "weatherApiKeyCheckHint": "Make sure the API key is activated in your OpenWeatherMap account (may take a few minutes)",
+  "weatherApiRateLimit": "Rate limit exceeded. Please try again later",
+  "weatherNetworkError": "Network error. Please check your internet connection",
+  "weatherErrorHint": "Please check the console for more details or try refreshing the page",
+  "locationAccessDenied": "Unable to get your location. Please allow location access in your browser.",
+  "locationPermissionHint": "You can allow location access in your browser settings"
 }

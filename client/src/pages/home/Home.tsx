@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import WeatherWidget from "../../components/WeatherWidget/WeatherWidget";
 import styles from "./home.module.scss";
 
 const Home: React.FC = () => {
@@ -11,17 +12,25 @@ const Home: React.FC = () => {
     <div className={styles.homePage}>
       <div className={styles.container}>
         <h1>{t("welcomeToGym")}</h1>
+        
+        <div className={styles.contentWrapper}>
+          <div className={styles.leftContent}>
+            <p className={styles.intro}>
+              {t("joinIntro")}
+            </p>
 
-        <p className={styles.intro}>
-          {t("joinIntro")}
-        </p>
+            <div className={styles.heroCard}>
+              <h2>{t("readyToStart")}</h2>
+              <p>
+                {t("signupToday")}
+              </p>
+              <button className={styles.ctaBtn} onClick={() => navigate("/signup")}>{t("joinNow")}</button>
+            </div>
+          </div>
 
-        <div className={styles.heroCard}>
-          <h2>{t("readyToStart")}</h2>
-          <p>
-            {t("signupToday")}
-          </p>
-          <button className={styles.ctaBtn} onClick={() => navigate("/signup")}>{t("joinNow")}</button>
+          <div className={styles.rightContent}>
+            <WeatherWidget />
+          </div>
         </div>
       </div>
     </div>
