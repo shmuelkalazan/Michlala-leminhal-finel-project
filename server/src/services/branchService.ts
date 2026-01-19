@@ -13,6 +13,8 @@ export const createBranch = async (data: {
   name: string;
   address: string;
   phone: string;
+  latitude?: number;
+  longitude?: number;
 }): Promise<IBranch> => new Branch(data).save();
 
 export const updateBranch = async (

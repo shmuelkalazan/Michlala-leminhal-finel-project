@@ -57,7 +57,8 @@
   flex-wrap: wrap;
   align-items: flex-end;
 
-  input {
+  input,
+  select {
     flex: 1;
     min-width: 150px;
     padding: 12px 14px;
@@ -75,6 +76,15 @@
     &:focus {
       outline: none;
       border-color: #f5c518;
+    }
+  }
+
+  select {
+    cursor: pointer;
+
+    option {
+      background: #2b2b2b;
+      color: #fff;
     }
   }
 

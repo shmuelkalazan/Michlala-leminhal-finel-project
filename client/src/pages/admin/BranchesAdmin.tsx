@@ -11,7 +11,7 @@ const BranchesAdmin = () => {
   const { t } = useTranslation();
   const user = useAtomValue(authUserAtom);
   const [branches, setBranches] = useState<any[]>([]);
-  const [form, setForm] = useState({ name: "", address: "", phone: "" });
+  const [form, setForm] = useState({ name: "", address: "", phone: "", latitude: "", longitude: "" });
   const [editId, setEditId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
@@ -30,11 +30,20 @@ const BranchesAdmin = () => {
 
   const save = async () => {
     try {
+      const payload = {
+        ...form,
+        latitude: form.latitude ? parseFloat(form.latitude) : undefined,
+        longitude: form.longitude ? parseFloat(form.longitude) : undefined,
+      };
       const url = editId ? `${BASE}/branches/${editId}` : `${BASE}/branches`;
       const method = editId ? "PUT" : "POST";
-      await fetch(url, { method, headers, body: JSON.stringify(form) }).then((r) => r.json());
-      setForm({ name: "", address: "", phone: "" }); setEditId(null); load();
-    } catch (e: any) { setError(e.message || t("saveFailed")); }
+      await fetch(url, { method, headers, body: JSON.stringify(payload) }).then((r) => r.json());
+      setForm({ name: "", address: "", phone: "", latitude: "", longitude: "" });
+      setEditId(null);
+      load();
+    } catch (e: any) {
+      setError(e.message || t("saveFailed"));
+    }
   };
 
   const remove = async (id: string) => {
@@ -55,6 +64,20 @@ const BranchesAdmin = () => {
           <input placeholder={t("name")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <input placeholder={t("address")} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
           <input placeholder={t("phone")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+          <input
+            type="number"
+            step="any"
+            placeholder={t("latitude")}
+            value={form.latitude}
+            onChange={(e) => setForm({ ...form, latitude: e.target.value })}
+          />
+          <input
+            type="number"
+            step="any"
+            placeholder={t("longitude")}
+            value={form.longitude}
+            onChange={(e) => setForm({ ...form, longitude: e.target.value })}
+          />
           <button onClick={save}>{editId ? t("update") : t("create")}</button>
         </div>
       </div>
@@ -64,7 +87,16 @@ const BranchesAdmin = () => {
             <strong>{b.name}</strong>
             <span className={styles.branchInfo}>{b.address} ({b.phone})</span>
             <div className={styles.buttonGroup}>
-              <button className={styles.button} onClick={() => { setForm({ name: b.name, address: b.address, phone: b.phone }); setEditId(b._id); }}>{t("edit")}</button>
+              <button className={styles.button} onClick={() => { 
+                setForm({ 
+                  name: b.name, 
+                  address: b.address, 
+                  phone: b.phone,
+                  latitude: b.latitude?.toString() || "",
+                  longitude: b.longitude?.toString() || ""
+                }); 
+                setEditId(b._id); 
+              }}>{t("edit")}</button>
               <button className={styles.button} onClick={() => remove(b._id)}>{t("delete")}</button>
             </div>
           </li>

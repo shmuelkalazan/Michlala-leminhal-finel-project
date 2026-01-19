@@ -1,0 +1,57 @@
+.timeSelector {
+  flex: 1;
+  min-width: 150px;
+}
+
+.select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #3a3a3a;
+  background: #2b2b2b;
+  color: #fff;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+  box-sizing: border-box;
+  overflow-y: auto;
+  
+  // Hide scrollbar but keep scrolling functionality
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE and Edge
+  
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #f5c518;
+  }
+
+  option {
+    background: #2b2b2b;
+    color: #fff;
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #3a3a3a;
+  background: #2b2b2b;
+  color: #fff;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #aaa;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #f5c518;
+  }
+}
