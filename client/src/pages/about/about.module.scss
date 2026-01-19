@@ -1,10 +1,21 @@
 .aboutPage {
-  height: 100%;
+  min-height: 100%;
   background: #1a1a1a;
   color: #ffffff;
   padding: 20px;
   font-family: "Segoe UI", sans-serif;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
+  
+  // Hide scrollbar but keep scrolling functionality
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE and Edge
+  
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
 }
 
 .container {
