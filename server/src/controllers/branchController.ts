@@ -25,13 +25,31 @@ export const createBranchController = async (req: Request, res: Response) => {
   const { name, address, phone, latitude, longitude } = req.body;
   if (!name || !address || !phone) return res.status(400).json({ message: "Missing fields" });
   try {
-    res.status(201).json(await branchService.createBranch({ 
-      name, 
-      address, 
-      phone, 
-      latitude: latitude ? parseFloat(latitude) : undefined,
-      longitude: longitude ? parseFloat(longitude) : undefined
-    }));
+    const latNum =
+      latitude === undefined || latitude === null || latitude === ""
+        ? undefined
+        : Number(latitude);
+    const lonNum =
+      longitude === undefined || longitude === null || longitude === ""
+        ? undefined
+        : Number(longitude);
+
+    const payload: {
+      name: string;
+      address: string;
+      phone: string;
+      latitude?: number;
+      longitude?: number;
+    } = {
+      name: String(name),
+      address: String(address),
+      phone: String(phone),
+    };
+
+    if (typeof latNum === "number" && Number.isFinite(latNum)) payload.latitude = latNum;
+    if (typeof lonNum === "number" && Number.isFinite(lonNum)) payload.longitude = lonNum;
+
+    res.status(201).json(await branchService.createBranch(payload));
   } catch (e) {
     res.status(500).json({ message: "Error creating branch" });
   }
