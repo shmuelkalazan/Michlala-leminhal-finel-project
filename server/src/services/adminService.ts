@@ -26,8 +26,12 @@ export const getAdminDashboard = async () => {
 
   const branchesOccupancy = await Branch.aggregate([
     { $lookup: { from: "lessons", localField: "lessons", foreignField: "_id", as: "branchLessons" } },
-    { $addFields: { activeRegistrations: { $sum: { $map: { input: "$branchLessons", as: "l", in: { $size: { $ifNull: ["$$l.students", []] } } } } } } },
-    { $project: { name: 1, address: 1, phone: 1, activeRegistrations: 1 } },
+    { $addFields: { 
+        activeRegistrations: { $sum: { $map: { input: "$branchLessons", as: "l", in: { $size: { $ifNull: ["$$l.students", []] } } } } },
+        lessonsCount: { $size: { $ifNull: ["$branchLessons", []] } }
+      } 
+    },
+    { $project: { _id: 1, name: 1, address: 1, phone: 1, activeRegistrations: 1, lessonsCount: 1 } },
     { $sort: { activeRegistrations: -1 } },
   ]);
 
