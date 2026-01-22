@@ -75,7 +75,14 @@ export const registerUser = async (data: {
  * Get all users with populated lessons
  */
 export const getAllUsers = async (): Promise<IUser[]> => {
-  return await User.find().populate("lessons", "name date time type");
+  return await User.find().populate({
+    path: "lessons",
+    select: "title name date startTime endTime time type coachName coachId branchId",
+    populate: [
+      { path: "coachId", select: "name email" },
+      { path: "branchId", select: "name address phone" },
+    ],
+  });
 };
 
 /**
@@ -83,7 +90,14 @@ export const getAllUsers = async (): Promise<IUser[]> => {
  */
 export const getUserById = async (id: string): Promise<IUser | null> => {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
-  return await User.findById(id).populate("lessons", "name date time type");
+  return await User.findById(id).populate({
+    path: "lessons",
+    select: "title name date startTime endTime time type coachName coachId branchId",
+    populate: [
+      { path: "coachId", select: "name email" },
+      { path: "branchId", select: "name address phone" },
+    ],
+  });
 };
 
 /**

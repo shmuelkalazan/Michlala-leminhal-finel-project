@@ -79,6 +79,49 @@
   }
 }
 
+.lessonHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.lessonTitle {
+  font-weight: 600;
+  color: #fff;
+}
+
+.lessonMeta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.35rem 1rem;
+  color: #ccc;
+  font-size: 0.95rem;
+}
+
+.cancelBtn {
+  border: 1px solid rgba(245, 101, 101, 0.45);
+  background: rgba(245, 101, 101, 0.12);
+  color: #f56565;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    border-color: rgba(245, 101, 101, 0.8);
+    background: rgba(245, 101, 101, 0.18);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
 .progressCard {
   background: #1c1c1c;
   border-radius: 16px;
