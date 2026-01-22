@@ -20,6 +20,7 @@
   left: 20px;
   top: 50%;
   transform: translateY(-50%);
+  gap: 15px;
 }
 
 .rightSection {
@@ -35,4 +36,80 @@
   color: #ffeb3b;
   font-size: 1rem;
   font-weight: 500;
+}
+
+// Hamburger button - hidden on desktop
+.hamburgerButton {
+  display: none;
+}
+
+// Overlay - hidden on desktop
+.overlay {
+  display: none;
+}
+
+// Mobile styles
+@media (max-width: 768px) {
+  .headerPageContainer {
+    left: 10px;
+    right: 10px;
+    padding: 10px 15px;
+  }
+
+  .leftSection {
+    left: 15px;
+  }
+
+  .rightSection {
+    right: 15px;
+  }
+
+  // Show hamburger button on mobile
+  .hamburgerButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1002;
+
+    span {
+      width: 100%;
+      height: 3px;
+      background-color: #fff;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    &:hover span {
+      background-color: #ffeb3b;
+    }
+  }
+
+  // Show overlay on mobile when sidebar is open
+  .overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 280px; // Start after sidebar width
+    width: calc(100vw - 280px);
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    animation: fadeIn 0.3s ease;
+    pointer-events: auto;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }
