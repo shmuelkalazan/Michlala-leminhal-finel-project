@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import * as branchService from "../services/branchService.js";
 
+/**
+ * Get all branches
+ */
 export const getBranches = async (_req: Request, res: Response) => {
   try {
     res.status(200).json(await branchService.getAllBranches());
@@ -9,6 +12,9 @@ export const getBranches = async (_req: Request, res: Response) => {
   }
 };
 
+/**
+ * Get a single branch by ID
+ */
 export const getBranch = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -21,6 +27,10 @@ export const getBranch = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Create a new branch
+ * Accepts location as string "lat,lon" or separate latitude/longitude
+ */
 export const createBranchController = async (req: Request, res: Response) => {
   const { name, address, phone, latitude, longitude, location } = req.body;
   if (!name || !address || !phone) return res.status(400).json({ message: "Missing fields" });
@@ -28,7 +38,7 @@ export const createBranchController = async (req: Request, res: Response) => {
     let latNum: number | undefined;
     let lonNum: number | undefined;
 
-    // אם יש location string (פורמט "lat,lon"), נפרסר אותו
+    // Parse location string format "lat,lon"
     if (location && typeof location === 'string' && location.trim()) {
       const parts = location.split(',').map(s => s.trim());
       if (parts.length === 2 && parts[0] && parts[1]) {
@@ -40,7 +50,7 @@ export const createBranchController = async (req: Request, res: Response) => {
         }
       }
     } else {
-      // אחרת, נשתמש ב-latitude ו-longitude הנפרדים
+      // Use separate latitude and longitude
       latNum =
         latitude === undefined || latitude === null || latitude === ""
           ? undefined
@@ -72,6 +82,10 @@ export const createBranchController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Update an existing branch
+ * Accepts location as string "lat,lon" or separate latitude/longitude
+ */
 export const updateBranchController = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -79,9 +93,9 @@ export const updateBranchController = async (req: Request, res: Response) => {
     
     const { location, latitude, longitude, ...rest } = req.body;
     
-    // אם יש location string, נפרסר אותו
     let updates: any = { ...rest };
     
+    // Parse location string format "lat,lon"
     if (location && typeof location === 'string' && location.trim()) {
       const parts = location.split(',').map(s => s.trim());
       if (parts.length === 2 && parts[0] && parts[1]) {
@@ -93,7 +107,7 @@ export const updateBranchController = async (req: Request, res: Response) => {
         }
       }
     } else if (latitude !== undefined || longitude !== undefined) {
-      // אחרת, נשתמש ב-latitude ו-longitude הנפרדים
+      // Use separate latitude and longitude
       if (latitude !== undefined && latitude !== null && latitude !== "") {
         const lat = Number(latitude);
         if (!isNaN(lat) && Number.isFinite(lat)) {
@@ -116,6 +130,9 @@ export const updateBranchController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Delete a branch
+ */
 export const deleteBranchController = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;

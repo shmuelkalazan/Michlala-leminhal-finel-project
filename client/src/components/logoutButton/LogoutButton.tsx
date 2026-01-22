@@ -11,8 +11,12 @@ const LogoutButton = () => {
   const user = useAtomValue(authUserAtom);
   const setUser = useSetAtom(authUserAtom);
 
+  /**
+   * Handle user logout
+   * Removes token from localStorage and redirects to home
+   */
   const handleLogout = () => {
-    logout(); // מוחק את ה-token מ-localStorage
+    logout();
     setUser(null);
     navigate("/");
   };

@@ -18,7 +18,7 @@ const Signup = () => {
     setError(""); setLoading(true);
     try {
       const data = await signup(form);
-      // signup מחזיר { user, token } - token כבר נשמר ב-localStorage
+      // Signup returns { user, token } - token is saved in localStorage
       if (!data || (!data.user && !data.id)) {
         throw new Error(t("signupFailed") || "Signup failed - invalid response");
       }
@@ -33,7 +33,6 @@ const Signup = () => {
       }
       navigate("/");
     } catch (err) {
-      console.error("Signup error:", err);
       setError(err instanceof Error ? err.message : t("signupFailed"));
     } finally {
       setLoading(false);

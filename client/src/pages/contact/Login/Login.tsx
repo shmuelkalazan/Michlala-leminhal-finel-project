@@ -18,7 +18,7 @@ const Login = () => {
     setError(""); setLoading(true);
     try {
       const data = await login(form);
-      // login מחזיר { user, token } - token כבר נשמר ב-localStorage
+      // Login returns { user, token } - token is saved in localStorage
       if (!data || (!data.user && !data.id)) {
         throw new Error(t("loginFailed") || "Login failed - invalid response");
       }
@@ -33,7 +33,6 @@ const Login = () => {
       }
       navigate("/");
     } catch (err) {
-      console.error("Login error:", err);
       setError(err instanceof Error ? err.message : t("loginFailed"));
     } finally {
       setLoading(false);

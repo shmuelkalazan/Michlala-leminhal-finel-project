@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 
+/**
+ * Authorization middleware
+ * Checks if user has one of the allowed roles
+ */
 export const authorize = (...allowedRoles: Array<"admin" | "trainer" | "user">) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;

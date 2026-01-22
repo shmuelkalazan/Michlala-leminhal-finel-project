@@ -14,20 +14,16 @@ const Lessons: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
+  // Fetch lessons on component mount
   useEffect(() => {
     setLoading(true);
     setError(null);
       fetchLessons()
       .then((data) => {
-        console.log("Lessons data received:", data);
-        if (data && data.length > 0) {
-          console.log("First lesson branchId:", data[0].branchId);
-        }
         setLessons(data || []);
         setError(null);
       })
       .catch((err: any) => {
-        console.error("Error fetching lessons:", err);
         setError(err.message || t("somethingWentWrong"));
         setLessons([]);
       })

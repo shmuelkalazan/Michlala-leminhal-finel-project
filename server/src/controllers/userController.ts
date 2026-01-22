@@ -3,6 +3,9 @@ import * as userService from "../services/userServic.js";
 import mongoose from "mongoose";
 import { AppError } from "../utils/appError.js";
 
+/**
+ * Get all users
+ */
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await userService.getAllUsers();
@@ -12,12 +15,15 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Get user by ID
+ * Users can only access their own data, admins can access any user
+ */
 export const getUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     if (!id) return res.status(400).json({ message: "User ID is required" });
     
-    // אם המשתמש המחובר מנסה לקבל את המידע שלו, או אם הוא admin
     if (req.user && (req.user.id === id || req.user.role === "admin")) {
       const user = await userService.getUserById(id);
       if (!user) return res.status(404).json({ message: "User not found" });
@@ -30,6 +36,10 @@ export const getUser = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Get current authenticated user
+ * Returns user data in AuthUser format
+ */
 export const getCurrentUser = async (req: Request, res: Response) => {
   try {
     if (!req.user) {
@@ -39,7 +49,6 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     const user = await userService.getUserById(req.user.id);
     if (!user) return res.status(404).json({ message: "User not found" });
     
-    // יצירת AuthUser object
     const authUser = {
       id: user._id.toString(),
       name: user.name,
@@ -54,6 +63,10 @@ export const getCurrentUser = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Create a new user (signup)
+ * Generates JWT token for auto-login
+ */
 export const createUserController = async (req: Request, res: Response) => {
   try {
     const { name, email, password, role } = req.body;
@@ -63,7 +76,6 @@ export const createUserController = async (req: Request, res: Response) => {
     }
     const newUser = await userService.registerUser({ name, email, password, role });
     
-    // Generate JWT token for auto-login after signup
     const { generateToken } = await import('../services/jwtService.js');
     const token = generateToken(newUser.id, newUser.role);
     
@@ -79,6 +91,9 @@ export const createUserController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Update user information
+ */
 export const updateUserController = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -91,6 +106,9 @@ export const updateUserController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Delete a user
+ */
 export const deleteUserController = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -103,6 +121,10 @@ export const deleteUserController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * User login
+ * Authenticates user and returns JWT token
+ */
 export const loginController = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -111,7 +133,6 @@ export const loginController = async (req: Request, res: Response) => {
     }
     const user = await userService.authenticateUser(email, password);
     
-    // Generate JWT token
     const { generateToken } = await import('../services/jwtService.js');
     const token = generateToken(user.id, user.role);
     
@@ -127,6 +148,9 @@ export const loginController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Add a lesson to user's enrolled lessons
+ */
 export const addLessonController = async (req: Request, res: Response) => {
   try {
     const { lessonId } = req.body;
@@ -144,6 +168,9 @@ export const addLessonController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Remove a lesson from user's enrolled lessons
+ */
 export const removeLessonController = async (req: Request, res: Response) => {
   try {
     const { lessonId } = req.body;
@@ -162,6 +189,9 @@ export const removeLessonController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Update user role (admin only)
+ */
 export const setUserRoleController = async (req: Request, res: Response) => {
   try {
     const { role } = req.body;
@@ -176,6 +206,9 @@ export const setUserRoleController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Update user preferred language
+ */
 export const setUserLanguageController = async (req: Request, res: Response) => {
   try {
     const { language } = req.body;

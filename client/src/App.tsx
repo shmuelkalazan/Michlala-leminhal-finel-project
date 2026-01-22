@@ -17,13 +17,17 @@ import UsersAdmin from "./pages/admin/UsersAdmin";
 import { authUserAtom, currentLanguageAtom } from "./state/authAtom";
 import { getCurrentUser, getAuthToken } from "./api/auth";
 
+/**
+ * Main application component
+ * Handles routing, authentication, and language preferences
+ */
 const App = () => {
   const user = useAtomValue(authUserAtom);
   const setUser = useSetAtom(authUserAtom);
   const setCurrentLanguage = useSetAtom(currentLanguageAtom);
   const { i18n } = useTranslation();
 
-  // טעינת משתמש אם יש token
+  // Load user from token on app initialization
   useEffect(() => {
     const token = getAuthToken();
     if (token && !user) {
@@ -36,18 +40,16 @@ const App = () => {
               setCurrentLanguage(userData.preferredLanguage);
             }
           } else {
-            // אם הנתונים לא תקינים, מוחקים את ה-token
             localStorage.removeItem('authToken');
           }
         })
-        .catch((error) => {
-          console.error("Error loading user:", error);
-          // אם token לא תקין, מוחקים אותו
+        .catch(() => {
           localStorage.removeItem('authToken');
         });
     }
   }, [user, setUser, i18n, setCurrentLanguage]);
 
+  // Update language when user changes
   useEffect(() => {
     if (user?.preferredLanguage) {
       i18n.changeLanguage(user.preferredLanguage);

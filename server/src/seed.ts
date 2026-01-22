@@ -5,18 +5,20 @@ import { Branch } from "./models/branch.js";
 import { Lesson } from "./models/lessons.js";
 import { User } from "./models/user.js";
 
+/**
+ * Seed database with initial data
+ * Creates branches, admins, trainers, users, and lessons with relationships
+ */
 const seedDatabase = async () => {
   try {
     await connectDB();
 
-    console.log("🗑️ Cleaning database...");
-    // ניקוי מלא של ה-DB
+    // Clear existing data
     await Branch.deleteMany({});
     await Lesson.deleteMany({});
     await User.deleteMany({});
-    console.log("✅ Database cleaned");
 
-    // ---------- סניפים (10 סניפים) ----------
+    // Create branches
     const branchLocations = [
       { lat: 31.7683, lon: 35.2137, name: "ירושלים - מרכז", address: "רחוב יפו 15, ירושלים", phone: "02-1234567" },
       { lat: 32.0853, lon: 34.7818, name: "תל אביב - צפון", address: "רחוב דיזנגוף 100, תל אביב", phone: "03-2345678" },
@@ -30,7 +32,6 @@ const seedDatabase = async () => {
       { lat: 32.6996, lon: 35.3035, name: "טבריה - מרכז", address: "רחוב הגליל 25, טבריה", phone: "04-0123456" },
     ];
     
-    console.log("📦 Creating branches...");
     const branches = await Branch.insertMany(
       branchLocations.map((loc) => ({
         name: loc.name,
@@ -40,10 +41,8 @@ const seedDatabase = async () => {
         longitude: loc.lon,
       }))
     );
-    console.log(`✅ Created ${branches.length} branches`);
 
-    // ---------- מנהלים (5 מנהלים) ----------
-    console.log("👔 Creating admins...");
+    // Create admins
     const hashedPassword = await bcrypt.hash("123456", 10);
     const admins = await User.insertMany(
       Array.from({ length: 5 }).map((_, i: number) => ({
@@ -55,10 +54,8 @@ const seedDatabase = async () => {
         isPayed: true,
       }))
     );
-    console.log(`✅ Created ${admins.length} admins`);
 
-    // ---------- מאמנים (15 מאמנים) ----------
-    console.log("💪 Creating trainers...");
+    // Create trainers
     const trainers = await User.insertMany(
       Array.from({ length: 15 }).map((_, i: number) => ({
         name: `מאמן ${i + 1}`,
@@ -69,10 +66,8 @@ const seedDatabase = async () => {
         isPayed: true,
       }))
     );
-    console.log(`✅ Created ${trainers.length} trainers`);
 
-    // ---------- משתמשים (30 משתמשים) ----------
-    console.log("👤 Creating users...");
+    // Create users
     const users = await User.insertMany(
       Array.from({ length: 30 }).map((_, i: number) => ({
         name: `משתמש ${i + 1}`,
@@ -80,30 +75,28 @@ const seedDatabase = async () => {
         password: hashedPassword,
         role: "user",
         registrationDate: new Date(),
-        isPayed: i % 2 === 0, // חצי מהם שילמו
+        isPayed: i % 2 === 0,
       }))
     );
-    console.log(`✅ Created ${users.length} users`);
 
-    // ---------- שיעורים (20 שיעורים) ----------
-    console.log("📚 Creating lessons...");
+    // Create lessons with relationships
     const lessons: any[] = [];
-    const allUsers = [...users]; // כל המשתמשים
+    const allUsers = [...users];
 
     for (let i = 0; i < 20; i++) {
       const trainer = trainers[i % trainers.length];
       if (!trainer) continue;
       
-      // כל שיעור מקושר לסניף
+      // Link each lesson to a branch
       const branch = branches[i % branches.length];
       if (!branch) continue;
 
-      // כל שיעור יש לו 3-5 תלמידים
-      const numStudents = 3 + (i % 3); // 3, 4, או 5 תלמידים
+      // Assign 3-5 students to each lesson
+      const numStudents = 3 + (i % 3);
       const startIndex = (i * 2) % allUsers.length;
       const lessonStudents = [];
       
-      // לוקח תלמידים בצורה מעגלית
+      // Assign students in circular manner
       for (let j = 0; j < numStudents; j++) {
         const studentIndex = (startIndex + j) % allUsers.length;
         const student = allUsers[studentIndex];
@@ -112,14 +105,14 @@ const seedDatabase = async () => {
         }
       }
 
-      // יצירת השיעור עם branchId
+      // Create lesson with branchId
       const lesson = await Lesson.create({
         title: `שיעור ${i + 1} - ${branch.name}`,
         coachName: trainer.name,
         coachId: trainer._id,
-        branchId: branch._id, // קישור לסניף
-        date: new Date(Date.now() + i * 24 * 60 * 60 * 1000), // כל שיעור ביום אחר
-        startTime: `${18 + (i % 3)}:00`, // 18:00, 19:00, או 20:00
+        branchId: branch._id,
+        date: new Date(Date.now() + i * 24 * 60 * 60 * 1000),
+        startTime: `${18 + (i % 3)}:00`,
         endTime: `${19 + (i % 3)}:00`,
         type: i % 2 === 0 ? "group" : "personal",
         students: lessonStudents.map(s => s?._id).filter(id => id !== undefined),
@@ -128,42 +121,25 @@ const seedDatabase = async () => {
 
       lessons.push(lesson);
 
-      // קישור שיעור למאמן
+      // Link lesson to trainer
       await User.findByIdAndUpdate(trainer._id, {
         $addToSet: { lessons: lesson._id },
       });
 
-      // קישור שיעור לכל תלמיד
+      // Link lesson to each student
       for (const student of lessonStudents) {
         await User.findByIdAndUpdate(student._id, {
           $addToSet: { lessons: lesson._id },
         });
       }
 
-      // קישור שיעור לסניף (גם דרך ה-array של הסניף)
+      // Link lesson to branch
       await Branch.findByIdAndUpdate(branch._id, {
         $addToSet: { lessons: lesson._id },
       });
     }
 
-    console.log(`✅ Created ${lessons.length} lessons`);
-
-    // סיכום
-    console.log("\n✅ Database seeded successfully!");
-    console.log("📊 Summary:");
-    console.log(`   - ${branches.length} branches`);
-    console.log(`   - ${admins.length} admins`);
-    console.log(`   - ${trainers.length} trainers`);
-    console.log(`   - ${users.length} users`);
-    console.log(`   - ${lessons.length} lessons`);
-    console.log("\n🔗 All relationships created:");
-    console.log("   ✓ Lessons linked to branches (branchId)");
-    console.log("   ✓ Lessons linked to trainers (coachId)");
-    console.log("   ✓ Users enrolled in lessons (students)");
-    console.log("   ✓ Trainers have lessons in their profile");
-    console.log("   ✓ Users have lessons in their profile");
-    console.log("   ✓ Branches have lessons in their profile");
-
+    console.log("✅ Database seeded successfully!");
     process.exit(0);
   } catch (error) {
     console.error("❌ Error seeding database:", error);

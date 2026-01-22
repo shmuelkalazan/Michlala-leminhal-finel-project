@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../services/jwtService.js';
 
+/**
+ * Authentication middleware
+ * Verifies JWT token from Authorization header and attaches user to request
+ */
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   

@@ -3,6 +3,9 @@ type SignupPayload = Credentials & { name: string };
 
 const BASE_URL = "http://localhost:3000";
 
+/**
+ * Handle API response and parse JSON
+ */
 const handleResponse = async (res: Response) => {
   let data;
   try {
@@ -30,7 +33,7 @@ export const signup = async (payload: SignupPayload) => {
   
   const data = await handleResponse(response);
   
-  // אם יש token (במקרה של auto-login אחרי signup)
+  // Save token for auto-login after signup
   if (data.token) {
     localStorage.setItem('authToken', data.token);
   }
@@ -47,7 +50,7 @@ export const login = async (payload: Credentials) => {
   
   const data = await handleResponse(response);
   
-  // שמור token ב-localStorage
+  // Save token in localStorage
   if (data.token) {
     localStorage.setItem('authToken', data.token);
   }

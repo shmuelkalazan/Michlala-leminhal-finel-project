@@ -1,17 +1,14 @@
 import { Request, Response } from "express";
 import * as lessonService from "../services/lessonService.js";
 
+/**
+ * Get all lessons
+ */
 export const getLessons = async (req: Request, res: Response) => {
   try {
     const lessons = await lessonService.getAllLessons();
-    console.log("Lessons fetched:", lessons?.length || 0);
-    if (lessons && lessons.length > 0) {
-      console.log("First lesson branchId type:", typeof lessons[0].branchId);
-      console.log("First lesson branchId:", JSON.stringify(lessons[0].branchId, null, 2));
-    }
     res.status(200).json(lessons || []);
   } catch (error) {
-    console.error("Error fetching lessons:", error);
     res.status(500).json({ 
       message: "Error fetching lessons", 
       error: error instanceof Error ? error.message : "Unknown error" 
@@ -19,6 +16,9 @@ export const getLessons = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Get a single lesson by ID
+ */
 export const getLesson = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -35,9 +35,12 @@ export const getLesson = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Create a new lesson
+ * Uses authenticated user's ID as coachId if not provided
+ */
 export const createLessonController = async (req: Request, res: Response) => {
   try {
-    // הוסף את coachId מה-user המחובר אם לא נשלח
     const lessonData = {
       ...req.body,
       coachId: req.body.coachId || req.user?.id,
@@ -54,6 +57,9 @@ export const createLessonController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Update an existing lesson
+ */
 export const updateLessonController = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -70,6 +76,9 @@ export const updateLessonController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Delete a lesson
+ */
 export const deleteLessonController = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;

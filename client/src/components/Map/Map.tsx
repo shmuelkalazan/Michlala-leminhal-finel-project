@@ -106,7 +106,7 @@ const Map = () => {
       map.addLayer(vectorLayer);
       vectorLayerRef.current = vectorLayer;
 
-      // התאמת המפה לכל המיקומים
+      // Fit map to all locations
       const extent = vectorSource.getExtent();
       if (extent && extent.length === 4 && !isNaN(extent[0]) && !isNaN(extent[1])) {
         map.getView().fit(extent, {
@@ -114,7 +114,7 @@ const Map = () => {
           maxZoom: 12,
         });
       } else {
-        // fallback אם אין extent תקין
+        // Fallback if no valid extent
         const lons = validBranches.map((b) => b.longitude!);
         const lats = validBranches.map((b) => b.latitude!);
         const centerLon = (Math.min(...lons) + Math.max(...lons)) / 2;

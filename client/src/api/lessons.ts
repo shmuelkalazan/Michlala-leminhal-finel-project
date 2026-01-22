@@ -4,6 +4,9 @@ import { getAuthHeaders } from "./auth";
 
 const BASE_URL = "http://localhost:3000";
 
+/**
+ * Handle API response and parse JSON
+ */
 const handle = async (res: globalThis.Response) => {
   let data;
   try {

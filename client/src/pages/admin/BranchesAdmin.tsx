@@ -29,7 +29,7 @@ const BranchesAdmin = () => {
 
   const save = async () => {
     try {
-      // פרסור המיקום מפורמט "lat,lon" ל-latitude ו-longitude
+      // Parse location from "lat,lon" format to latitude and longitude
       let latitude: number | undefined;
       let longitude: number | undefined;
       

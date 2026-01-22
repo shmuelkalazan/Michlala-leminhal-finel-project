@@ -3,20 +3,11 @@ import { User } from "../models/user.js";
 import { Branch } from "../models/branch.js";
 import mongoose from "mongoose";
 
+/**
+ * Get all lessons with populated coach, branch, and students
+ * @returns Array of lessons with populated relationships
+ */
 export const getAllLessons = async () => {
-  // First, check raw lessons from DB
-  const rawLessons = await Lesson.find().limit(1);
-  if (rawLessons.length > 0 && rawLessons[0]) {
-    const rawLesson = rawLessons[0];
-    console.log("Raw lesson from DB (before populate):", {
-      _id: rawLesson._id,
-      branchId: rawLesson.branchId,
-      branchIdType: typeof rawLesson.branchId,
-      branchIdValue: rawLesson.branchId?.toString()
-    });
-  }
-  
-  // Try without lean first to see if populate works better
   const lessons = await Lesson.find()
     .populate({
       path: "coachId",
@@ -31,26 +22,7 @@ export const getAllLessons = async () => {
       select: "name email"
     });
   
-  console.log("Lessons count:", lessons.length);
-  if (lessons.length > 0 && lessons[0]) {
-    const firstLesson = lessons[0];
-    console.log("First lesson branchId:", firstLesson.branchId);
-    console.log("First lesson branchId type:", typeof firstLesson.branchId);
-    console.log("First lesson raw data:", JSON.stringify(firstLesson.toObject ? firstLesson.toObject() : firstLesson, null, 2));
-    if (firstLesson.branchId) {
-      const branch = firstLesson.branchId as any;
-      console.log("Branch details:", {
-        _id: branch._id,
-        name: branch.name,
-        address: branch.address,
-        phone: branch.phone
-      });
-    } else {
-      console.log("⚠️ branchId is null/undefined - lesson might not be linked to a branch!");
-    }
-  }
-  
-  // Convert to plain objects
+  // Convert to plain objects and format branchId
   return lessons.map((lesson: any) => {
     const lessonObj = lesson.toObject ? lesson.toObject() : lesson;
     
@@ -74,6 +46,11 @@ export const getAllLessons = async () => {
   });
 };
 
+/**
+ * Get a single lesson by ID with populated relationships
+ * @param id - Lesson ID
+ * @returns Lesson object or null if not found
+ */
 export const getLessonById = async (id: string) => {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
   const lesson = await Lesson.findById(id)
@@ -111,6 +88,11 @@ export const getLessonById = async (id: string) => {
   return lessonObj;
 };
 
+/**
+ * Create a new lesson and link it to branch and students
+ * @param lessonData - Lesson data including branchId
+ * @returns Created lesson with populated relationships
+ */
 export const createLesson = async (lessonData: any) => {
   if (!lessonData.branchId) {
     throw new Error("Branch ID is required");
@@ -174,6 +156,12 @@ export const createLesson = async (lessonData: any) => {
   return lessonObj;
 };
 
+/**
+ * Update a lesson and manage branch relationships
+ * @param id - Lesson ID
+ * @param updates - Update data
+ * @returns Updated lesson with populated relationships
+ */
 export const updateLesson = async (id: string, updates: any) => {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
 
@@ -242,6 +230,11 @@ export const updateLesson = async (id: string, updates: any) => {
   return null;
 };
 
+/**
+ * Delete a lesson and remove it from related branches and users
+ * @param id - Lesson ID
+ * @returns Deleted lesson or null if not found
+ */
 export const deleteLesson = async (id: string) => {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
 
