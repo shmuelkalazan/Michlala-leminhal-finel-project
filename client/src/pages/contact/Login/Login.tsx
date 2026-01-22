@@ -17,7 +17,15 @@ const Login = () => {
     event.preventDefault();
     setError(""); setLoading(true);
     try {
-      const user = await login(form);
+      const data = await login(form);
+      // Login returns { user, token } - token is saved in localStorage
+      if (!data || (!data.user && !data.id)) {
+        throw new Error(t("loginFailed") || "Login failed - invalid response");
+      }
+      const user = data.user || data;
+      if (!user.id || !user.email || !user.name) {
+        throw new Error(t("loginFailed") || "Login failed - invalid user data");
+      }
       setUser(user);
       if (user.preferredLanguage) {
         i18n.changeLanguage(user.preferredLanguage);

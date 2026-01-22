@@ -2,6 +2,10 @@ import { User } from "../models/user.js";
 import { Lesson } from "../models/lessons.js";
 import { Branch } from "../models/branch.js";
 
+/**
+ * Get admin dashboard statistics
+ * Returns totals, branch occupancy, trainer occupancy, and user lessons count
+ */
 export const getAdminDashboard = async () => {
   const totalUsers = await User.countDocuments();
   const totalLessons = await Lesson.countDocuments();

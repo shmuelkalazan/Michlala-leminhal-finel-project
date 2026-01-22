@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAtomValue } from "jotai";
 import { authUserAtom } from "../../state/authAtom";
+import { getAuthHeaders } from "../../api/auth";
 import styles from "./BranchesAdmin.module.scss";
 
 const BASE = "http://localhost:3000";
@@ -11,14 +12,12 @@ const BranchesAdmin = () => {
   const { t } = useTranslation();
   const user = useAtomValue(authUserAtom);
   const [branches, setBranches] = useState<any[]>([]);
-  const [form, setForm] = useState({ name: "", address: "", phone: "", latitude: "", longitude: "" });
+  const [form, setForm] = useState({ name: "", address: "", phone: "", location: "" });
   const [editId, setEditId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
-  const headers = { "Content-Type": "application/json", "x-role": "admin", "x-user-id": user?.id || "" };
-
   const load = () =>
-    fetch(`${BASE}/branches`, { headers })
+    fetch(`${BASE}/branches`, { headers: getAuthHeaders() })
       .then((r) => r.json())
       .then(setBranches)
       .catch((e) => setError(e.message || t("loadFailed")));
@@ -30,15 +29,33 @@ const BranchesAdmin = () => {
 
   const save = async () => {
     try {
+      // Parse location from "lat,lon" format to latitude and longitude
+      let latitude: number | undefined;
+      let longitude: number | undefined;
+      
+      if (form.location && form.location.trim()) {
+        const parts = form.location.split(',').map(s => s.trim());
+        if (parts.length === 2) {
+          const lat = parseFloat(parts[0]);
+          const lon = parseFloat(parts[1]);
+          if (!isNaN(lat) && !isNaN(lon)) {
+            latitude = lat;
+            longitude = lon;
+          }
+        }
+      }
+      
       const payload = {
-        ...form,
-        latitude: form.latitude ? parseFloat(form.latitude) : undefined,
-        longitude: form.longitude ? parseFloat(form.longitude) : undefined,
+        name: form.name,
+        address: form.address,
+        phone: form.phone,
+        ...(latitude !== undefined && longitude !== undefined ? { latitude, longitude } : {}),
       };
+      
       const url = editId ? `${BASE}/branches/${editId}` : `${BASE}/branches`;
       const method = editId ? "PUT" : "POST";
-      await fetch(url, { method, headers, body: JSON.stringify(payload) }).then((r) => r.json());
-      setForm({ name: "", address: "", phone: "", latitude: "", longitude: "" });
+      await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(payload) }).then((r) => r.json());
+      setForm({ name: "", address: "", phone: "", location: "" });
       setEditId(null);
       load();
     } catch (e: any) {
@@ -47,7 +64,7 @@ const BranchesAdmin = () => {
   };
 
   const remove = async (id: string) => {
-    await fetch(`${BASE}/branches/${id}`, { method: "DELETE", headers }).then((r) => r.json());
+    await fetch(`${BASE}/branches/${id}`, { method: "DELETE", headers: getAuthHeaders() }).then((r) => r.json());
     load();
   };
 
@@ -65,18 +82,9 @@ const BranchesAdmin = () => {
           <input placeholder={t("address")} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
           <input placeholder={t("phone")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
           <input
-            type="number"
-            step="any"
-            placeholder={t("latitude")}
-            value={form.latitude}
-            onChange={(e) => setForm({ ...form, latitude: e.target.value })}
-          />
-          <input
-            type="number"
-            step="any"
-            placeholder={t("longitude")}
-            value={form.longitude}
-            onChange={(e) => setForm({ ...form, longitude: e.target.value })}
+            placeholder={t("location") ? `${t("location")} (31.7683,35.2137)` : "מיקום (קו רוחב, קו אורך) - לדוגמה: 31.7683,35.2137"}
+            value={form.location}
+            onChange={(e) => setForm({ ...form, location: e.target.value })}
           />
           <button onClick={save}>{editId ? t("update") : t("create")}</button>
         </div>
@@ -88,12 +96,14 @@ const BranchesAdmin = () => {
             <span className={styles.branchInfo}>{b.address} ({b.phone})</span>
             <div className={styles.buttonGroup}>
               <button className={styles.button} onClick={() => { 
+                const location = b.latitude !== undefined && b.longitude !== undefined 
+                  ? `${b.latitude},${b.longitude}` 
+                  : "";
                 setForm({ 
                   name: b.name, 
                   address: b.address, 
                   phone: b.phone,
-                  latitude: b.latitude?.toString() || "",
-                  longitude: b.longitude?.toString() || ""
+                  location: location
                 }); 
                 setEditId(b._id); 
               }}>{t("edit")}</button>

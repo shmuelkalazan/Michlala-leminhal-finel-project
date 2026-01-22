@@ -57,3 +57,16 @@ body, html {
     overflow-x: hidden;
   }
 }
+
+// Mobile responsive styles
+@media (max-width: 768px) {
+  .app {
+    padding: 10px;
+  }
+
+  .main {
+    margin-top: calc(70px + 1rem + 10px);
+    height: calc(100vh - 70px - 1rem - 20px);
+    min-height: calc(100vh - 70px - 1rem - 20px);
+  }
+}

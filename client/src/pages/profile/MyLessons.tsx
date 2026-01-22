@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAtomValue } from "jotai";
 import { authUserAtom } from "../../state/authAtom";
-import { fetchUserWithLessons } from "../../api/lessons";
+import { cancelLesson, fetchUserWithLessons } from "../../api/lessons";
 import { Lesson } from "../../types/interface";
 import styles from "./MyLessons.module.scss";
 
@@ -10,16 +10,42 @@ const MyLessons = () => {
   const { t } = useTranslation();
   const user = useAtomValue(authUserAtom);
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [error, setError] = useState(""); const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [cancelingId, setCancelingId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!user?.id) { setError(t("loginRequired")); return; }
+  const load = () => {
+    if (!user?.id) {
+      setError(t("loginRequired"));
+      return Promise.resolve();
+    }
     setLoading(true);
-    fetchUserWithLessons(user)
-      .then((data) => setLessons(data.lessons || []))
+    setError("");
+    return fetchUserWithLessons(user)
+      .then((data: any) => setLessons(data.lessons || []))
       .catch((err: any) => setError(err.message || t("loadFailed")))
       .finally(() => setLoading(false));
-  }, [user, t]);
+  };
+
+  useEffect(() => {
+    void load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, t]);
+
+  const handleCancel = async (lessonId?: string) => {
+    if (!lessonId) return;
+    try {
+      setCancelingId(lessonId);
+      await cancelLesson(lessonId);
+      // Optimistic update + refresh to ensure server truth
+      setLessons((prev) => prev.filter((l) => l._id !== lessonId));
+      await load();
+    } catch (err: any) {
+      setError(err?.message || t("updateFailed"));
+    } finally {
+      setCancelingId(null);
+    }
+  };
 
   const progress = useMemo(() => {
     const buckets = new Map<string, number>();
@@ -44,7 +70,44 @@ const MyLessons = () => {
           <ul className={styles.list}>
             {lessons.map((l) => (
               <li key={l._id} className={styles.listItem}>
-                {l.title || l.name} – {new Date(l.date).toLocaleDateString()} {l.startTime || l.time || ""}
+                <div className={styles.lessonHeader}>
+                  <div className={styles.lessonTitle}>{l.title || l.name}</div>
+                  <button
+                    type="button"
+                    className={styles.cancelBtn}
+                    onClick={() => handleCancel(l._id)}
+                    disabled={cancelingId === l._id}
+                  >
+                    {cancelingId === l._id ? t("saving") : t("cancelRegistration")}
+                  </button>
+                </div>
+
+                <div className={styles.lessonMeta}>
+                  <div>
+                    <strong>{t("coach")}:</strong>{" "}
+                    {typeof l.coachId === "object" && l.coachId?.name
+                      ? l.coachId.name
+                      : l.coachName || "-"}
+                  </div>
+                  <div>
+                    <strong>{t("date")}:</strong>{" "}
+                    {l.date ? new Date(l.date).toLocaleDateString() : "-"}
+                  </div>
+                  <div>
+                    <strong>{t("time")}:</strong> {l.startTime || l.time || "-"}
+                  </div>
+
+                  {l.branchId && typeof l.branchId === "object" && (
+                    <>
+                      <div>
+                        <strong>{t("branches")}:</strong> {l.branchId.name || "-"}
+                      </div>
+                      <div>
+                        <strong>{t("address")}:</strong> {l.branchId.address || "-"}
+                      </div>
+                    </>
+                  )}
+                </div>
               </li>
             ))}
           </ul>

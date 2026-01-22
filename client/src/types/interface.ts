@@ -8,9 +8,9 @@ export interface Lesson {
   _id?: string;
   title?: string;
   name?: string;
-  coachName: string;
-  coachId: string | null;
-  branchId?: string | { _id: string; name: string; address: string };
+  coachName?: string;
+  coachId: string | null | { _id: string; name: string; email?: string };
+  branchId?: string | { _id: string; name: string; address: string; phone: string };
   date: string | Date;
   startTime?: string;
   endTime?: string;

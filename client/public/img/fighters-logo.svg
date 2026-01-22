@@ -1,0 +1,54 @@
+<svg width="140" height="50" viewBox="0 0 140 50" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="powerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#f5c518;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff6b35;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f5c518;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff6b35;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Powerful Boxing Glove Icon -->
+  <g transform="translate(8, 8)">
+    <!-- Left Glove - More Powerful -->
+    <ellipse cx="15" cy="22" rx="10" ry="12" fill="url(#powerGrad)" stroke="#fff" stroke-width="2" filter="url(#glow)"/>
+    <ellipse cx="10" cy="16" rx="5" ry="6" fill="url(#powerGrad)" stroke="#fff" stroke-width="1.5"/>
+    <line x1="7" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+    
+    <!-- Power Lines / Energy Effect -->
+    <line x1="5" y1="18" x2="8" y2="20" stroke="#f5c518" stroke-width="1.5" opacity="0.8"/>
+    <line x1="5" y1="22" x2="8" y2="24" stroke="#f5c518" stroke-width="1.5" opacity="0.8"/>
+    <line x1="5" y1="26" x2="8" y2="28" stroke="#f5c518" stroke-width="1.5" opacity="0.8"/>
+    
+    <!-- Right Glove - More Powerful -->
+    <ellipse cx="32" cy="22" rx="10" ry="12" fill="url(#powerGrad)" stroke="#fff" stroke-width="2" filter="url(#glow)"/>
+    <ellipse cx="37" cy="16" rx="5" ry="6" fill="url(#powerGrad)" stroke="#fff" stroke-width="1.5"/>
+    <line x1="34" y1="13" x2="40" y2="13" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+    
+    <!-- Power Lines / Energy Effect -->
+    <line x1="42" y1="18" x2="39" y2="20" stroke="#f5c518" stroke-width="1.5" opacity="0.8"/>
+    <line x1="42" y1="22" x2="39" y2="24" stroke="#f5c518" stroke-width="1.5" opacity="0.8"/>
+    <line x1="42" y1="26" x2="39" y2="28" stroke="#f5c518" stroke-width="1.5" opacity="0.8"/>
+    
+    <!-- Connecting Power Line -->
+    <line x1="23.5" y1="22" x2="23.5" y2="28" stroke="url(#powerGrad)" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Powerful Text: FIGHTERS -->
+  <text x="50" y="32" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="url(#textGrad)" filter="url(#glow)" letter-spacing="1px">
+    FIGHTERS
+  </text>
+  
+  <!-- Underline for emphasis -->
+  <line x1="50" y1="36" x2="135" y2="36" stroke="url(#textGrad)" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

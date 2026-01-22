@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   getUsers,
   getUser,
+  getCurrentUser,
   createUserController,
   updateUserController,
   deleteUserController,
@@ -12,21 +13,23 @@ import {
   setUserLanguageController
 } from "../controllers/userController.js";
 import { authorize } from "../middlewares/authorize.js";
+import { authenticate } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.get("/", getUsers);
-router.get("/:id", getUser);
+router.get("/me", authenticate, getCurrentUser);
+router.get("/", authenticate, getUsers);
+router.get("/:id", authenticate, getUser);
 router.post("/", createUserController);
 router.post("/signup", createUserController);
-router.put("/:id", authorize("admin"), updateUserController);
-router.delete("/:id", authorize("admin"), deleteUserController);
+router.put("/:id", authenticate, authorize("admin"), updateUserController);
+router.delete("/:id", authenticate, authorize("admin"), deleteUserController);
 
 router.post("/login", loginController);
 
-router.post("/add-lesson", addLessonController);
-router.post("/remove-lesson", removeLessonController);
-router.put("/:id/role", authorize("admin"), setUserRoleController);
-router.put("/:id/language", setUserLanguageController);
+router.post("/add-lesson", authenticate, addLessonController);
+router.post("/remove-lesson", authenticate, removeLessonController);
+router.put("/:id/role", authenticate, authorize("admin"), setUserRoleController);
+router.put("/:id/language", authenticate, setUserLanguageController);
 
 export default router;

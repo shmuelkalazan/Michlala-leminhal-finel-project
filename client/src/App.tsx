@@ -15,12 +15,41 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import BranchesAdmin from "./pages/admin/BranchesAdmin";
 import UsersAdmin from "./pages/admin/UsersAdmin";
 import { authUserAtom, currentLanguageAtom } from "./state/authAtom";
+import { getCurrentUser, getAuthToken } from "./api/auth";
 
+/**
+ * Main application component
+ * Handles routing, authentication, and language preferences
+ */
 const App = () => {
   const user = useAtomValue(authUserAtom);
+  const setUser = useSetAtom(authUserAtom);
   const setCurrentLanguage = useSetAtom(currentLanguageAtom);
   const { i18n } = useTranslation();
 
+  // Load user from token on app initialization
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token && !user) {
+      getCurrentUser()
+        .then((userData) => {
+          if (userData && userData.id) {
+            setUser(userData);
+            if (userData.preferredLanguage) {
+              i18n.changeLanguage(userData.preferredLanguage);
+              setCurrentLanguage(userData.preferredLanguage);
+            }
+          } else {
+            localStorage.removeItem('authToken');
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem('authToken');
+        });
+    }
+  }, [user, setUser, i18n, setCurrentLanguage]);
+
+  // Update language when user changes
   useEffect(() => {
     if (user?.preferredLanguage) {
       i18n.changeLanguage(user.preferredLanguage);

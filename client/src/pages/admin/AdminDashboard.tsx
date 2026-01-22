@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAtomValue } from "jotai";
 import { authUserAtom } from "../../state/authAtom";
+import { getAuthHeaders } from "../../api/auth";
 import styles from "./AdminDashboard.module.scss";
 
 const BASE = "http://localhost:3000";
@@ -15,7 +16,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (user?.role !== "admin") return setError(t("adminAccessRequired"));
-    fetch(`${BASE}/admin/dashboard`, { headers: { "x-role": "admin", "x-user-id": user.id || "" } })
+    fetch(`${BASE}/admin/dashboard`, { headers: getAuthHeaders() })
       .then((r) => {
         if (!r.ok) throw new Error(r.statusText);
         return r.json();

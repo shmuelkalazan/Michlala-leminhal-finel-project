@@ -2,6 +2,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { authUserAtom } from "../../state/authAtom";
+import { logout } from "../../api/auth";
 import styles from "./logoutButton.module.scss";
 
 const LogoutButton = () => {
@@ -10,7 +11,12 @@ const LogoutButton = () => {
   const user = useAtomValue(authUserAtom);
   const setUser = useSetAtom(authUserAtom);
 
+  /**
+   * Handle user logout
+   * Removes token from localStorage and redirects to home
+   */
   const handleLogout = () => {
+    logout();
     setUser(null);
     navigate("/");
   };

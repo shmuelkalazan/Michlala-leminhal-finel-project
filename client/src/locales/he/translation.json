@@ -70,6 +70,7 @@
   "selectBranch": "בחר סניף",
   "address": "כתובת",
   "phone": "טלפון",
+  "location": "מיקום",
   "loadFailed": "טעינה נכשלה",
   "adminAccessRequired": "נדרשת גישה של מנהל",
   "deleteUser": "למחוק משתמש?",

@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import Map from "../../components/Map/Map";
+import { wrapEnglishText } from "../../utils/textDirection";
 import styles from "./about.module.scss";
 
 const About: React.FC = () => {
@@ -8,10 +9,10 @@ const About: React.FC = () => {
   return (
     <div className={styles.aboutPage}>
       <div className={styles.container}>
-        <h1>{t("aboutOurGym")}</h1>
+        <h1>{wrapEnglishText(t("aboutOurGym"))}</h1>
 
         <p className={styles.intro}>
-          {t("aboutIntro")}
+          {wrapEnglishText(t("aboutIntro"))}
         </p>
 
         <div className={styles.sections}>
@@ -32,7 +33,7 @@ const About: React.FC = () => {
           <div className={styles.card}>
             <h2>{t("modernEquipment")}</h2>
             <p>
-              {t("equipmentText")}
+              {wrapEnglishText(t("equipmentText"))}
             </p>
           </div>
 

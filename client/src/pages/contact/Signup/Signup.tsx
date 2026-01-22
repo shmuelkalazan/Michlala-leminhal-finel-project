@@ -17,7 +17,15 @@ const Signup = () => {
     event.preventDefault();
     setError(""); setLoading(true);
     try {
-      const user = await signup(form);
+      const data = await signup(form);
+      // Signup returns { user, token } - token is saved in localStorage
+      if (!data || (!data.user && !data.id)) {
+        throw new Error(t("signupFailed") || "Signup failed - invalid response");
+      }
+      const user = data.user || data;
+      if (!user.id || !user.email || !user.name) {
+        throw new Error(t("signupFailed") || "Signup failed - invalid user data");
+      }
       setUser(user);
       if (user.preferredLanguage) {
         i18n.changeLanguage(user.preferredLanguage);

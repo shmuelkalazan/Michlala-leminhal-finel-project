@@ -12,8 +12,14 @@ export type AuthUser = {
   preferredLanguage?: string;
 };
 
+/**
+ * Normalize email to lowercase and trim whitespace
+ */
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
+/**
+ * Convert IUser to AuthUser format
+ */
 const toAuthUser = (user: IUser): AuthUser => ({
   id: user._id.toString(),
   name: user.name,
@@ -37,6 +43,10 @@ export const createUser = async (data: {
   return await user.save();
 };
 
+/**
+ * Register a new user
+ * Checks for existing email and returns AuthUser format
+ */
 export const registerUser = async (data: {
   name: string;
   email: string;
@@ -61,15 +71,39 @@ export const registerUser = async (data: {
   return toAuthUser(user);
 };
 
+/**
+ * Get all users with populated lessons
+ */
 export const getAllUsers = async (): Promise<IUser[]> => {
-  return await User.find().populate("lessons", "name date time type");
+  return await User.find().populate({
+    path: "lessons",
+    select: "title name date startTime endTime time type coachName coachId branchId",
+    populate: [
+      { path: "coachId", select: "name email" },
+      { path: "branchId", select: "name address phone" },
+    ],
+  });
 };
 
+/**
+ * Get user by ID with populated lessons
+ */
 export const getUserById = async (id: string): Promise<IUser | null> => {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
-  return await User.findById(id).populate("lessons", "name date time type");
+  return await User.findById(id).populate({
+    path: "lessons",
+    select: "title name date startTime endTime time type coachName coachId branchId",
+    populate: [
+      { path: "coachId", select: "name email" },
+      { path: "branchId", select: "name address phone" },
+    ],
+  });
 };
 
+/**
+ * Update user information
+ * Hashes password if provided
+ */
 export const updateUser = async (
   id: string,
   updates: Partial<IUser>
@@ -82,6 +116,9 @@ export const updateUser = async (
   return await User.findByIdAndUpdate(id, updates, { new: true });
 };
 
+/**
+ * Set user role
+ */
 export const setUserRole = async (
   id: string,
   role: IUser["role"]
@@ -90,6 +127,9 @@ export const setUserRole = async (
   return User.findByIdAndUpdate(id, { role }, { new: true });
 };
 
+/**
+ * Set user preferred language
+ */
 export const setUserLanguage = async (
   id: string,
   language: string
@@ -98,6 +138,10 @@ export const setUserLanguage = async (
   return User.findByIdAndUpdate(id, { preferredLanguege: language }, { new: true });
 };
 
+/**
+ * Delete a user
+ * Removes user from all enrolled lessons
+ */
 export const deleteUser = async (id: string): Promise<IUser | null> => {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
 
@@ -114,7 +158,10 @@ export const deleteUser = async (id: string): Promise<IUser | null> => {
   return await User.findByIdAndDelete(id);
 };
 
-
+/**
+ * Login user (legacy method)
+ * @deprecated Use authenticateUser instead
+ */
 export const loginUser = async (
   email: string,
   password: string
@@ -126,6 +173,10 @@ export const loginUser = async (
   return user;
 };
 
+/**
+ * Authenticate user with email and password
+ * Returns AuthUser format or throws AppError
+ */
 export const authenticateUser = async (
   email: string,
   password: string
@@ -140,6 +191,10 @@ export const authenticateUser = async (
   return toAuthUser(user);
 };
 
+/**
+ * Add a lesson to user's enrolled lessons
+ * Also adds user to lesson's students array
+ */
 export const addLessonToUser = async (
   userId: string,
   lessonId: string
@@ -164,6 +219,10 @@ export const addLessonToUser = async (
   return updatedUser;
 };
 
+/**
+ * Remove a lesson from user's enrolled lessons
+ * Also removes user from lesson's students array
+ */
 export const removeLessonFromUser = async (
   userId: string,
   lessonId: string
