@@ -47,6 +47,8 @@
   "loginRequired": "يتطلب تسجيل الدخول",
   "upcoming": "القادمة",
   "completed": "المكتملة",
+  "upcomingLessons": "الدروس القادمة",
+  "pastLessons": "الدروس المكتملة",
   "classOccupancy": "إشغال الفصل",
   "title": "العنوان",
   "startTime": "وقت البدء",
@@ -118,5 +120,11 @@
   "locationAccessDenied": "تعذر الحصول على موقعك. يرجى السماح بالوصول إلى الموقع في متصفحك.",
   "locationPermissionHint": "يمكنك السماح بالوصول إلى الموقع في إعدادات متصفحك",
   "latitude": "خط العرض",
-  "longitude": "خط الطول"
+  "longitude": "خط الطول",
+  "filterLessons": "تصفية الدروس",
+  "allCoaches": "جميع المدربين",
+  "allLocations": "جميع المواقع",
+  "clearFilters": "مسح المرشحات",
+  "noFilteredLessons": "لا توجد دروس تطابق المرشحات",
+  "noUpcomingLessons": "لا توجد دروس قادمة"
 }

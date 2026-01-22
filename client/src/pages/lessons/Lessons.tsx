@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAtomValue } from "jotai";
 import { authUserAtom } from "../../state/authAtom";
@@ -13,6 +13,11 @@ const Lessons: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  
+  // Filter states
+  const [selectedCoach, setSelectedCoach] = useState<string>("");
+  const [selectedBranch, setSelectedBranch] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<string>("");
 
   // Fetch lessons on component mount
   useEffect(() => {
@@ -29,6 +34,81 @@ const Lessons: React.FC = () => {
       })
       .finally(() => setLoading(false));
   }, [t]);
+
+  // Filter out past lessons - only show future lessons
+  const futureLessons = useMemo(() => {
+    const now = new Date();
+    return lessons.filter((lesson) => {
+      if (!lesson.date) {
+        return true; // Include lessons without date
+      }
+
+      const lessonDate = new Date(lesson.date);
+      // Parse time if available
+      if (lesson.startTime) {
+        const [hours, minutes] = lesson.startTime.split(':').map(Number);
+        lessonDate.setHours(hours || 0, minutes || 0, 0, 0);
+      } else if (lesson.time) {
+        const [hours, minutes] = lesson.time.split(':').map(Number);
+        lessonDate.setHours(hours || 0, minutes || 0, 0, 0);
+      }
+
+      return lessonDate >= now;
+    });
+  }, [lessons]);
+
+  // Extract unique coaches and branches from future lessons only
+  const { uniqueCoaches, uniqueBranches } = useMemo(() => {
+    const coaches = new Set<string>();
+    const branches = new Set<string>();
+    
+    futureLessons.forEach((lesson) => {
+      if (lesson.coachName) {
+        coaches.add(lesson.coachName);
+      }
+      if (lesson.branchId && typeof lesson.branchId === "object" && lesson.branchId.name) {
+        branches.add(lesson.branchId.name);
+      }
+    });
+    
+    return {
+      uniqueCoaches: Array.from(coaches).sort(),
+      uniqueBranches: Array.from(branches).sort(),
+    };
+  }, [futureLessons]);
+
+  // Filter future lessons based on selected filters
+  const filteredLessons = useMemo(() => {
+    return futureLessons.filter((lesson) => {
+      // Filter by coach
+      if (selectedCoach && lesson.coachName !== selectedCoach) {
+        return false;
+      }
+      
+      // Filter by branch
+      if (selectedBranch) {
+        const branchName = lesson.branchId && typeof lesson.branchId === "object" 
+          ? lesson.branchId.name 
+          : "";
+        if (branchName !== selectedBranch) {
+          return false;
+        }
+      }
+      
+      // Filter by date
+      if (selectedDate) {
+        const lessonDate = new Date(lesson.date);
+        const filterDate = new Date(selectedDate);
+        const lessonDateStr = lessonDate.toISOString().split('T')[0];
+        const filterDateStr = filterDate.toISOString().split('T')[0];
+        if (lessonDateStr !== filterDateStr) {
+          return false;
+        }
+      }
+      
+      return true;
+    });
+  }, [futureLessons, selectedCoach, selectedBranch, selectedDate]);
 
   const isUser = user?.role === "user";
   const handleToggle = async (lessonId?: string, isEnrolled?: boolean) => {
@@ -62,15 +142,91 @@ const Lessons: React.FC = () => {
   return (
     <div className={styles.lessonsContainer}>
       {error && <div className={styles.lessonsError}>{error}</div>}
-      {!loading && lessons.length === 0 && !error && (
-        <div className={styles.lessonsError}>{t("noLessonsAvailable") || "No lessons available"}</div>
+      
+      {/* Filters Section */}
+      <div className={styles.filtersContainer}>
+        <h2 className={styles.filtersTitle}>{t("filterLessons") || "סינון שיעורים"}</h2>
+        <div className={styles.filtersGrid}>
+          <div className={styles.filterGroup}>
+            <label htmlFor="coach-filter" className={styles.filterLabel}>
+              {t("coach")}:
+            </label>
+            <select
+              id="coach-filter"
+              className={styles.filterSelect}
+              value={selectedCoach}
+              onChange={(e) => setSelectedCoach(e.target.value)}
+            >
+              <option value="">{t("allCoaches") || "כל המאמנים"}</option>
+              {uniqueCoaches.map((coach) => (
+                <option key={coach} value={coach}>
+                  {coach}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.filterGroup}>
+            <label htmlFor="branch-filter" className={styles.filterLabel}>
+              {t("location") || "מיקום"}:
+            </label>
+            <select
+              id="branch-filter"
+              className={styles.filterSelect}
+              value={selectedBranch}
+              onChange={(e) => setSelectedBranch(e.target.value)}
+            >
+              <option value="">{t("allLocations") || "כל המיקומים"}</option>
+              {uniqueBranches.map((branch) => (
+                <option key={branch} value={branch}>
+                  {branch}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.filterGroup}>
+            <label htmlFor="date-filter" className={styles.filterLabel}>
+              {t("date")}:
+            </label>
+            <input
+              id="date-filter"
+              type="date"
+              className={styles.filterInput}
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
+          </div>
+
+          {(selectedCoach || selectedBranch || selectedDate) && (
+            <button
+              className={styles.clearFiltersBtn}
+              onClick={() => {
+                setSelectedCoach("");
+                setSelectedBranch("");
+                setSelectedDate("");
+              }}
+            >
+              {t("clearFilters") || "נקה סינונים"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {!loading && filteredLessons.length === 0 && !error && (
+        <div className={styles.lessonsError}>
+          {futureLessons.length === 0 
+            ? t("noUpcomingLessons") || "אין שיעורים קרובים"
+            : t("noFilteredLessons") || "אין שיעורים התואמים לסינון"}
+        </div>
       )}
-      {lessons.map((lesson) => {
-        const enrolled = (lesson.students || []).some(
-          (s: Student) => s._id === user?.id || s.email === user?.email
-        );
-        return (
-          <div key={lesson._id} className={styles.lessonCard}>
+      <div className={styles.lessonsGrid}>
+        {filteredLessons.map((lesson) => {
+          const enrolled = (lesson.students || []).some(
+            (s: Student) => s._id === user?.id || s.email === user?.email
+          );
+          return (
+            <div key={lesson._id} className={styles.lessonCard}>
             <div className={styles.lessonHeader}>
               <h2 className={styles.lessonTitle}>{lesson.title || lesson.name}</h2>
               <span className={styles.lessonType}>{lesson.type}</span>
@@ -108,9 +264,10 @@ const Lessons: React.FC = () => {
                 {busyId === lesson._id ? t("saving") : enrolled ? t("cancelRegistration") : t("registerBtn")}
               </button>
             )}
-          </div>
-        );
-      })}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

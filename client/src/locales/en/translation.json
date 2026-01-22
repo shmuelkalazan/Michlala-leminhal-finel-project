@@ -47,6 +47,8 @@
   "loginRequired": "Login required",
   "upcoming": "Upcoming",
   "completed": "Completed",
+  "upcomingLessons": "Upcoming Lessons",
+  "pastLessons": "Past Lessons",
   "classOccupancy": "Class occupancy",
   "title": "Title",
   "startTime": "Start time",
@@ -118,5 +120,11 @@
   "locationAccessDenied": "Unable to get your location. Please allow location access in your browser.",
   "locationPermissionHint": "You can allow location access in your browser settings",
   "latitude": "Latitude",
-  "longitude": "Longitude"
+  "longitude": "Longitude",
+  "filterLessons": "Filter Lessons",
+  "allCoaches": "All Coaches",
+  "allLocations": "All Locations",
+  "clearFilters": "Clear Filters",
+  "noFilteredLessons": "No lessons match the filters",
+  "noUpcomingLessons": "No upcoming lessons"
 }

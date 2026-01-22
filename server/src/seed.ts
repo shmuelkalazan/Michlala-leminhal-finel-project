@@ -44,9 +44,16 @@ const seedDatabase = async () => {
 
     // Create admins
     const hashedPassword = await bcrypt.hash("123456", 10);
+    const adminNames = [
+      "דוד כהן",
+      "שרה לוי",
+      "יוסף ישראלי",
+      "רחל אברהם",
+      "משה דוד"
+    ];
     const admins = await User.insertMany(
-      Array.from({ length: 5 }).map((_, i: number) => ({
-        name: `מנהל ${i + 1}`,
+      adminNames.map((name, i: number) => ({
+        name: name,
         email: `admin${i + 1}@gym.com`,
         password: hashedPassword,
         role: "admin",
@@ -56,9 +63,26 @@ const seedDatabase = async () => {
     );
 
     // Create trainers
+    const trainerNames = [
+      "אלון כהן",
+      "מיכל לוי",
+      "רונן ישראלי",
+      "נועה דוד",
+      "עמית אברהם",
+      "תמר כהן",
+      "אור לוי",
+      "יואב ישראלי",
+      "שירה דוד",
+      "איתי אברהם",
+      "מור כהן",
+      "דני לוי",
+      "ליאור ישראלי",
+      "עדי דוד",
+      "גל אברהם"
+    ];
     const trainers = await User.insertMany(
-      Array.from({ length: 15 }).map((_, i: number) => ({
-        name: `מאמן ${i + 1}`,
+      trainerNames.map((name, i: number) => ({
+        name: name,
         email: `trainer${i + 1}@gym.com`,
         password: hashedPassword,
         role: "trainer",
@@ -68,9 +92,41 @@ const seedDatabase = async () => {
     );
 
     // Create users
+    const userNames = [
+      "אבי כהן",
+      "בתיה לוי",
+      "גד ישראלי",
+      "דנה דוד",
+      "הדר אברהם",
+      "ויקי כהן",
+      "זוהר לוי",
+      "חיים ישראלי",
+      "טל דוד",
+      "יאיר אברהם",
+      "כרמי כהן",
+      "ליאת לוי",
+      "מיכאל ישראלי",
+      "נטע דוד",
+      "סתיו אברהם",
+      "עומר כהן",
+      "פז לוי",
+      "ציון ישראלי",
+      "קרן דוד",
+      "רן אברהם",
+      "שי כהן",
+      "תום לוי",
+      "אורן ישראלי",
+      "ברק דוד",
+      "גיא אברהם",
+      "דור כהן",
+      "הילה לוי",
+      "יותם ישראלי",
+      "כרמל דוד",
+      "לירון אברהם"
+    ];
     const users = await User.insertMany(
-      Array.from({ length: 30 }).map((_, i: number) => ({
-        name: `משתמש ${i + 1}`,
+      userNames.map((name, i: number) => ({
+        name: name,
         email: `user${i + 1}@gym.com`,
         password: hashedPassword,
         role: "user",
@@ -79,44 +135,80 @@ const seedDatabase = async () => {
       }))
     );
 
-    // Create lessons with relationships
+    // Create lessons with relationships - spread over 10 months
     const lessons: any[] = [];
     const allUsers = [...users];
-
-    for (let i = 0; i < 20; i++) {
-      const trainer = trainers[i % trainers.length];
+    
+    // Calculate date range: 5 months ago to 5 months from now (10 months total)
+    const now = new Date();
+    const fiveMonthsAgo = new Date(now);
+    fiveMonthsAgo.setMonth(fiveMonthsAgo.getMonth() - 5);
+    
+    const fiveMonthsFromNow = new Date(now);
+    fiveMonthsFromNow.setMonth(fiveMonthsFromNow.getMonth() + 5);
+    
+    // Create approximately 300 lessons spread over 10 months
+    // That's about 1 lesson per day on average
+    const totalDays = Math.floor((fiveMonthsFromNow.getTime() - fiveMonthsAgo.getTime()) / (1000 * 60 * 60 * 24));
+    const lessonsToCreate = 300;
+    const daysBetweenLessons = Math.floor(totalDays / lessonsToCreate);
+    
+    const lessonTypes = ["group", "personal", "group", "group", "personal"]; // More group lessons
+    const timeSlots = [
+      { start: "08:00", end: "09:00" },
+      { start: "10:00", end: "11:00" },
+      { start: "14:00", end: "15:00" },
+      { start: "16:00", end: "17:00" },
+      { start: "18:00", end: "19:00" },
+      { start: "19:00", end: "20:00" },
+      { start: "20:00", end: "21:00" },
+    ];
+    
+    console.log(`Creating ${lessonsToCreate} lessons over ${totalDays} days...`);
+    
+    for (let i = 0; i < lessonsToCreate; i++) {
+      // Randomly select trainer, branch, and students
+      const trainer = trainers[Math.floor(Math.random() * trainers.length)];
       if (!trainer) continue;
       
-      // Link each lesson to a branch
-      const branch = branches[i % branches.length];
+      const branch = branches[Math.floor(Math.random() * branches.length)];
       if (!branch) continue;
-
-      // Assign 3-5 students to each lesson
-      const numStudents = 3 + (i % 3);
-      const startIndex = (i * 2) % allUsers.length;
-      const lessonStudents = [];
       
-      // Assign students in circular manner
-      for (let j = 0; j < numStudents; j++) {
-        const studentIndex = (startIndex + j) % allUsers.length;
-        const student = allUsers[studentIndex];
-        if (student) {
-          lessonStudents.push(student);
-        }
+      // Assign 2-8 students to each lesson (random)
+      const numStudents = 2 + Math.floor(Math.random() * 7);
+      const lessonStudents: any[] = [];
+      const shuffledUsers = [...allUsers].sort(() => Math.random() - 0.5);
+      
+      for (let j = 0; j < Math.min(numStudents, shuffledUsers.length); j++) {
+        lessonStudents.push(shuffledUsers[j]);
       }
-
-      // Create lesson with branchId
+      
+      // Calculate lesson date - spread evenly over 10 months
+      const daysOffset = i * daysBetweenLessons + Math.floor(Math.random() * daysBetweenLessons);
+      const lessonDate = new Date(fiveMonthsAgo);
+      lessonDate.setDate(lessonDate.getDate() + daysOffset);
+      
+      // Random time slot
+      const timeSlotIndex = Math.floor(Math.random() * timeSlots.length);
+      const timeSlot = timeSlots[timeSlotIndex];
+      if (!timeSlot) continue;
+      
+      // Random lesson type
+      const lessonType = lessonTypes[Math.floor(Math.random() * lessonTypes.length)];
+      
+      // Create lesson
       const lesson = await Lesson.create({
-        title: `שיעור ${i + 1} - ${branch.name}`,
+        title: `${lessonType === "group" ? "שיעור קבוצתי" : "שיעור אישי"} ${i + 1} - ${branch.name}`,
+        description: `שיעור ${lessonType === "group" ? "קבוצתי" : "אישי"} עם ${trainer.name}`,
         coachName: trainer.name,
         coachId: trainer._id,
         branchId: branch._id,
-        date: new Date(Date.now() + i * 24 * 60 * 60 * 1000),
-        startTime: `${18 + (i % 3)}:00`,
-        endTime: `${19 + (i % 3)}:00`,
-        type: i % 2 === 0 ? "group" : "personal",
+        date: lessonDate,
+        startTime: timeSlot.start,
+        endTime: timeSlot.end,
+        type: lessonType,
         students: lessonStudents.map(s => s?._id).filter(id => id !== undefined),
-        maxPatricipants: 10,
+        maxPatricipants: lessonType === "group" ? 10 : 1,
       });
 
       lessons.push(lesson);
@@ -137,6 +229,11 @@ const seedDatabase = async () => {
       await Branch.findByIdAndUpdate(branch._id, {
         $addToSet: { lessons: lesson._id },
       });
+      
+      // Log progress every 50 lessons
+      if ((i + 1) % 50 === 0) {
+        console.log(`Created ${i + 1}/${lessonsToCreate} lessons...`);
+      }
     }
 
     console.log("✅ Database seeded successfully!");
