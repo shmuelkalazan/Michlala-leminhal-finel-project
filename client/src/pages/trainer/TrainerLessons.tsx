@@ -45,10 +45,10 @@ const TrainerLessons = () => {
     const payload = { ...form, coachId: user.id, coachName: user.name };
     try {
       if (editId) {
-        const updated = await updateLesson(editId, payload, user || undefined);
+        const updated = await updateLesson(editId, payload);
         setLessons((p) => p.map((l) => (l._id === editId ? updated : l)));
       } else {
-        const created = await createLesson(payload, user || undefined);
+        const created = await createLesson(payload);
         setLessons((p) => [...p, created]);
       }
       setForm({ title: "", date: "", startTime: "", type: "", branchId: "" });
@@ -60,8 +60,14 @@ const TrainerLessons = () => {
   };
 
   const handleDelete = async (id?: string) => {
-    if (!id) return; try { await deleteLesson(id, user || undefined); setLessons((p) => p.filter((l) => l._id !== id)); }
-    catch (e: any) { setError(e.message || t("deleteFailed")); }
+    if (!id) return; 
+    try { 
+      await deleteLesson(id); 
+      setLessons((p) => p.filter((l) => l._id !== id)); 
+    }
+    catch (e: any) { 
+      setError(e.message || t("deleteFailed")); 
+    }
   };
 
   if (!user) return <div className={styles.loading}>{t("loginRequired")}</div>;
@@ -107,6 +113,9 @@ const TrainerLessons = () => {
               <strong>{l.title || l.name}</strong>
               <span className={styles.lessonInfo}>
                 {new Date(l.date).toLocaleDateString()} {l.startTime || l.time || ""} | {t("students")}: {l.students?.length || 0}
+                {l.branchId && typeof l.branchId === 'object' && (
+                  <> | {t("location")}: {l.branchId.address} | {t("phone")}: {l.branchId.phone}</>
+                )}
               </span>
               <div className={styles.buttonGroup}>
                 <button className={styles.button} onClick={() => { 
@@ -130,6 +139,9 @@ const TrainerLessons = () => {
               <strong>{l.title || l.name}</strong>
               <span className={styles.lessonInfo}>
                 {new Date(l.date).toLocaleDateString()} {l.startTime || l.time || ""} | {t("students")}: {l.students?.length || 0}
+                {l.branchId && typeof l.branchId === 'object' && (
+                  <> | {t("location")}: {l.branchId.address} | {t("phone")}: {l.branchId.phone}</>
+                )}
               </span>
               <div className={styles.buttonGroup}>
                 <button className={styles.button} onClick={() => { 

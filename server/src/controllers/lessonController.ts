@@ -4,9 +4,18 @@ import * as lessonService from "../services/lessonService.js";
 export const getLessons = async (req: Request, res: Response) => {
   try {
     const lessons = await lessonService.getAllLessons();
-    res.status(200).json(lessons);
+    console.log("Lessons fetched:", lessons?.length || 0);
+    if (lessons && lessons.length > 0) {
+      console.log("First lesson branchId type:", typeof lessons[0].branchId);
+      console.log("First lesson branchId:", JSON.stringify(lessons[0].branchId, null, 2));
+    }
+    res.status(200).json(lessons || []);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching lessons", error });
+    console.error("Error fetching lessons:", error);
+    res.status(500).json({ 
+      message: "Error fetching lessons", 
+      error: error instanceof Error ? error.message : "Unknown error" 
+    });
   }
 };
 
@@ -28,7 +37,17 @@ export const getLesson = async (req: Request, res: Response) => {
 
 export const createLessonController = async (req: Request, res: Response) => {
   try {
-    const newLesson = await lessonService.createLesson(req.body);
+    // הוסף את coachId מה-user המחובר אם לא נשלח
+    const lessonData = {
+      ...req.body,
+      coachId: req.body.coachId || req.user?.id,
+    };
+    
+    if (!lessonData.coachId) {
+      return res.status(400).json({ message: "Coach ID is required" });
+    }
+    
+    const newLesson = await lessonService.createLesson(lessonData);
     res.status(201).json(newLesson);
   } catch (error) {
     res.status(500).json({ message: "Error creating lesson", error });

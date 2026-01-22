@@ -17,7 +17,15 @@ const Login = () => {
     event.preventDefault();
     setError(""); setLoading(true);
     try {
-      const user = await login(form);
+      const data = await login(form);
+      // login מחזיר { user, token } - token כבר נשמר ב-localStorage
+      if (!data || (!data.user && !data.id)) {
+        throw new Error(t("loginFailed") || "Login failed - invalid response");
+      }
+      const user = data.user || data;
+      if (!user.id || !user.email || !user.name) {
+        throw new Error(t("loginFailed") || "Login failed - invalid user data");
+      }
       setUser(user);
       if (user.preferredLanguage) {
         i18n.changeLanguage(user.preferredLanguage);
@@ -25,6 +33,7 @@ const Login = () => {
       }
       navigate("/");
     } catch (err) {
+      console.error("Login error:", err);
       setError(err instanceof Error ? err.message : t("loginFailed"));
     } finally {
       setLoading(false);

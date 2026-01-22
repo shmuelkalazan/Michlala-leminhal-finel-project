@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAtomValue } from "jotai";
 import { authUserAtom } from "../../state/authAtom";
+import { getAuthHeaders } from "../../api/auth";
 import styles from "./UsersAdmin.module.scss";
 
 const BASE = "http://localhost:3000";
@@ -15,10 +16,8 @@ const UsersAdmin = () => {
   const [editId, setEditId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
-  const headers = { "Content-Type": "application/json", "x-role": "admin", "x-user-id": admin?.id || "" };
-
   const load = () =>
-    fetch(`${BASE}/users`, { headers })
+    fetch(`${BASE}/users`, { headers: getAuthHeaders() })
       .then((r) => r.json())
       .then(setUsers)
       .catch((e) => setError(e.message || t("loadFailed")));
@@ -33,9 +32,9 @@ const UsersAdmin = () => {
       if (editId) {
         const payload: any = { name: form.name, email: form.email };
         if (form.password) payload.password = form.password;
-        await fetch(`${BASE}/users/${editId}`, { method: "PUT", headers, body: JSON.stringify(payload) }).then((r) => r.json());
+        await fetch(`${BASE}/users/${editId}`, { method: "PUT", headers: getAuthHeaders(), body: JSON.stringify(payload) }).then((r) => r.json());
       } else {
-        await fetch(`${BASE}/users`, { method: "POST", headers, body: JSON.stringify(form) }).then((r) => r.json());
+        await fetch(`${BASE}/users`, { method: "POST", headers: getAuthHeaders(), body: JSON.stringify(form) }).then((r) => r.json());
       }
       setForm({ name: "", email: "", password: "" }); setEditId(null); load();
     } catch (e: any) { setError(e.message || t("saveFailed")); }
@@ -43,12 +42,12 @@ const UsersAdmin = () => {
 
   const remove = async (id: string) => {
     if (!confirm(t("deleteUser"))) return;
-    await fetch(`${BASE}/users/${id}`, { method: "DELETE", headers }).then((r) => r.json());
+    await fetch(`${BASE}/users/${id}`, { method: "DELETE", headers: getAuthHeaders() }).then((r) => r.json());
     load();
   };
 
   const changeRole = async (id: string, role: string) => {
-    await fetch(`${BASE}/users/${id}/role`, { method: "PUT", headers, body: JSON.stringify({ role }) }).then((r) => r.json());
+    await fetch(`${BASE}/users/${id}/role`, { method: "PUT", headers: getAuthHeaders(), body: JSON.stringify({ role }) }).then((r) => r.json());
     load();
   };
 

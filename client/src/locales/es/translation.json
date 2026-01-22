@@ -70,6 +70,7 @@
   "selectBranch": "Seleccionar Sucursal",
   "address": "Dirección",
   "phone": "Teléfono",
+  "location": "Ubicación",
   "loadFailed": "Error al cargar",
   "adminAccessRequired": "Se requiere acceso de administrador",
   "deleteUser": "¿Eliminar usuario?",

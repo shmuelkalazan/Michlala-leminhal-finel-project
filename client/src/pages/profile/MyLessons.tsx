@@ -16,7 +16,7 @@ const MyLessons = () => {
     if (!user?.id) { setError(t("loginRequired")); return; }
     setLoading(true);
     fetchUserWithLessons(user)
-      .then((data) => setLessons(data.lessons || []))
+      .then((data: any) => setLessons(data.lessons || []))
       .catch((err: any) => setError(err.message || t("loadFailed")))
       .finally(() => setLoading(false));
   }, [user, t]);
@@ -45,6 +45,9 @@ const MyLessons = () => {
             {lessons.map((l) => (
               <li key={l._id} className={styles.listItem}>
                 {l.title || l.name} – {new Date(l.date).toLocaleDateString()} {l.startTime || l.time || ""}
+                {l.branchId && typeof l.branchId === 'object' && (
+                  <> | {t("location")}: {l.branchId.address} | {t("phone")}: {l.branchId.phone}</>
+                )}
               </li>
             ))}
           </ul>

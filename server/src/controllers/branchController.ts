@@ -22,17 +22,34 @@ export const getBranch = async (req: Request, res: Response) => {
 };
 
 export const createBranchController = async (req: Request, res: Response) => {
-  const { name, address, phone, latitude, longitude } = req.body;
+  const { name, address, phone, latitude, longitude, location } = req.body;
   if (!name || !address || !phone) return res.status(400).json({ message: "Missing fields" });
   try {
-    const latNum =
-      latitude === undefined || latitude === null || latitude === ""
-        ? undefined
-        : Number(latitude);
-    const lonNum =
-      longitude === undefined || longitude === null || longitude === ""
-        ? undefined
-        : Number(longitude);
+    let latNum: number | undefined;
+    let lonNum: number | undefined;
+
+    // אם יש location string (פורמט "lat,lon"), נפרסר אותו
+    if (location && typeof location === 'string' && location.trim()) {
+      const parts = location.split(',').map(s => s.trim());
+      if (parts.length === 2 && parts[0] && parts[1]) {
+        const lat = parseFloat(parts[0]);
+        const lon = parseFloat(parts[1]);
+        if (!isNaN(lat) && !isNaN(lon)) {
+          latNum = lat;
+          lonNum = lon;
+        }
+      }
+    } else {
+      // אחרת, נשתמש ב-latitude ו-longitude הנפרדים
+      latNum =
+        latitude === undefined || latitude === null || latitude === ""
+          ? undefined
+          : Number(latitude);
+      lonNum =
+        longitude === undefined || longitude === null || longitude === ""
+          ? undefined
+          : Number(longitude);
+    }
 
     const payload: {
       name: string;
@@ -59,7 +76,39 @@ export const updateBranchController = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     if (!id) return res.status(400).json({ message: "Branch ID is required" });
-    const updated = await branchService.updateBranch(id, req.body);
+    
+    const { location, latitude, longitude, ...rest } = req.body;
+    
+    // אם יש location string, נפרסר אותו
+    let updates: any = { ...rest };
+    
+    if (location && typeof location === 'string' && location.trim()) {
+      const parts = location.split(',').map(s => s.trim());
+      if (parts.length === 2 && parts[0] && parts[1]) {
+        const lat = parseFloat(parts[0]);
+        const lon = parseFloat(parts[1]);
+        if (!isNaN(lat) && !isNaN(lon)) {
+          updates.latitude = lat;
+          updates.longitude = lon;
+        }
+      }
+    } else if (latitude !== undefined || longitude !== undefined) {
+      // אחרת, נשתמש ב-latitude ו-longitude הנפרדים
+      if (latitude !== undefined && latitude !== null && latitude !== "") {
+        const lat = Number(latitude);
+        if (!isNaN(lat) && Number.isFinite(lat)) {
+          updates.latitude = lat;
+        }
+      }
+      if (longitude !== undefined && longitude !== null && longitude !== "") {
+        const lon = Number(longitude);
+        if (!isNaN(lon) && Number.isFinite(lon)) {
+          updates.longitude = lon;
+        }
+      }
+    }
+    
+    const updated = await branchService.updateBranch(id, updates);
     if (!updated) return res.status(404).json({ message: "Branch not found" });
     res.status(200).json(updated);
   } catch (e) {

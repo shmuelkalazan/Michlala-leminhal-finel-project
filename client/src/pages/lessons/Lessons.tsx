@@ -15,9 +15,22 @@ const Lessons: React.FC = () => {
   const [busyId, setBusyId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchLessons()
-      .then(setLessons)
-      .catch((err: any) => setError(err.message || t("somethingWentWrong")))
+    setLoading(true);
+    setError(null);
+      fetchLessons()
+      .then((data) => {
+        console.log("Lessons data received:", data);
+        if (data && data.length > 0) {
+          console.log("First lesson branchId:", data[0].branchId);
+        }
+        setLessons(data || []);
+        setError(null);
+      })
+      .catch((err: any) => {
+        console.error("Error fetching lessons:", err);
+        setError(err.message || t("somethingWentWrong"));
+        setLessons([]);
+      })
       .finally(() => setLoading(false));
   }, [t]);
 
@@ -28,7 +41,7 @@ const Lessons: React.FC = () => {
     setBusyId(lessonId);
     try {
       const fn = isEnrolled ? cancelLesson : enrollInLesson;
-      await fn(userId, lessonId);
+      await fn(lessonId);
       setLessons((prev) =>
         prev.map((l) =>
           l._id === lessonId
@@ -49,10 +62,13 @@ const Lessons: React.FC = () => {
   };
 
   if (loading) return <div className={styles.lessonsLoading}>{t("loadingLessons")}</div>;
-  if (error) return <div className={styles.lessonsError}>{error}</div>;
 
   return (
     <div className={styles.lessonsContainer}>
+      {error && <div className={styles.lessonsError}>{error}</div>}
+      {!loading && lessons.length === 0 && !error && (
+        <div className={styles.lessonsError}>{t("noLessonsAvailable") || "No lessons available"}</div>
+      )}
       {lessons.map((lesson) => {
         const enrolled = (lesson.students || []).some(
           (s: Student) => s._id === user?.id || s.email === user?.email
@@ -68,6 +84,14 @@ const Lessons: React.FC = () => {
               <p><strong>{t("coach")}:</strong> {lesson.coachName}</p>
               <p><strong>{t("date")}:</strong> {new Date(lesson.date).toLocaleDateString()}</p>
               <p><strong>{t("time")}:</strong> {lesson.startTime || lesson.time}</p>
+              {lesson.branchId && typeof lesson.branchId === 'object' && lesson.branchId.address && (
+                <>
+                  <p><strong>{t("location") || "Location"}:</strong> {lesson.branchId.address}</p>
+                  {lesson.branchId.phone && (
+                    <p><strong>{t("phone") || "Phone"}:</strong> {lesson.branchId.phone}</p>
+                  )}
+                </>
+              )}
             </div>
             {user && (
               <div className={styles.lessonStudents}>

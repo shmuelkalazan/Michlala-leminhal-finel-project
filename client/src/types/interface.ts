@@ -10,7 +10,7 @@ export interface Lesson {
   name?: string;
   coachName: string;
   coachId: string | null;
-  branchId?: string | { _id: string; name: string; address: string };
+  branchId?: string | { _id: string; name: string; address: string; phone: string };
   date: string | Date;
   startTime?: string;
   endTime?: string;

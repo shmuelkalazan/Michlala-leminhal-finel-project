@@ -70,6 +70,7 @@
   "selectBranch": "Select Branch",
   "address": "Address",
   "phone": "Phone",
+  "location": "Location",
   "loadFailed": "Load failed",
   "adminAccessRequired": "Admin access required",
   "deleteUser": "Delete user?",

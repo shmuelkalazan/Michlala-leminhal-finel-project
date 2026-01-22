@@ -70,6 +70,7 @@
   "selectBranch": "اختر الفرع",
   "address": "العنوان",
   "phone": "الهاتف",
+  "location": "الموقع",
   "loadFailed": "فشل التحميل",
   "adminAccessRequired": "يتطلب الوصول كمسؤول",
   "deleteUser": "حذف المستخدم؟",

@@ -15,11 +15,38 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import BranchesAdmin from "./pages/admin/BranchesAdmin";
 import UsersAdmin from "./pages/admin/UsersAdmin";
 import { authUserAtom, currentLanguageAtom } from "./state/authAtom";
+import { getCurrentUser, getAuthToken } from "./api/auth";
 
 const App = () => {
   const user = useAtomValue(authUserAtom);
+  const setUser = useSetAtom(authUserAtom);
   const setCurrentLanguage = useSetAtom(currentLanguageAtom);
   const { i18n } = useTranslation();
+
+  // טעינת משתמש אם יש token
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token && !user) {
+      getCurrentUser()
+        .then((userData) => {
+          if (userData && userData.id) {
+            setUser(userData);
+            if (userData.preferredLanguage) {
+              i18n.changeLanguage(userData.preferredLanguage);
+              setCurrentLanguage(userData.preferredLanguage);
+            }
+          } else {
+            // אם הנתונים לא תקינים, מוחקים את ה-token
+            localStorage.removeItem('authToken');
+          }
+        })
+        .catch((error) => {
+          console.error("Error loading user:", error);
+          // אם token לא תקין, מוחקים אותו
+          localStorage.removeItem('authToken');
+        });
+    }
+  }, [user, setUser, i18n, setCurrentLanguage]);
 
   useEffect(() => {
     if (user?.preferredLanguage) {
