@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import WeatherWidget from "../../components/WeatherWidget/WeatherWidget";
+import { wrapEnglishText } from "../../utils/textDirection";
 import styles from "./home.module.scss";
 
 const Home: React.FC = () => {
@@ -11,12 +12,12 @@ const Home: React.FC = () => {
   return (
     <div className={styles.homePage}>
       <div className={styles.container}>
-        <h1>{t("welcomeToGym")}</h1>
+        <h1>{wrapEnglishText(t("welcomeToGym"))}</h1>
         
         <div className={styles.contentWrapper}>
           <div className={styles.leftContent}>
             <p className={styles.intro}>
-              {t("joinIntro")}
+              {wrapEnglishText(t("joinIntro"))}
             </p>
 
             <div className={styles.heroCard}>
