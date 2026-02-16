@@ -10,8 +10,7 @@ import { Feature } from 'ol';
 import { Point } from 'ol/geom';
 import { Icon, Style } from 'ol/style';
 import styles from './Map.module.scss';
-
-const BASE = "http://localhost:3000";
+import { API_URL } from '../../api/config';
 
 interface Branch {
   _id: string;
@@ -29,7 +28,7 @@ const Map = () => {
   const [branches, setBranches] = useState<Branch[]>([]);
 
   useEffect(() => {
-    fetch(`${BASE}/branches/public`)
+    fetch(`${API_URL}/branches/public`)
       .then((r) => r.json())
       .then((data) => {
         setBranches(data);

@@ -47,6 +47,8 @@
   "loginRequired": "נדרשת התחברות",
   "upcoming": "קרובים",
   "completed": "הושלמו",
+  "upcomingLessons": "שיעורים קרובים",
+  "pastLessons": "שיעורים שבוצעו",
   "classOccupancy": "תפוסת כיתה",
   "title": "כותרת",
   "startTime": "שעת התחלה",
@@ -118,5 +120,11 @@
   "locationAccessDenied": "לא ניתן לקבל את המיקום שלך. אנא אשר גישה למיקום בדפדפן.",
   "locationPermissionHint": "אפשר לאשר גישה למיקום בהגדרות הדפדפן",
   "latitude": "קו רוחב (Latitude)",
-  "longitude": "קו אורך (Longitude)"
+  "longitude": "קו אורך (Longitude)",
+  "filterLessons": "סינון שיעורים",
+  "allCoaches": "כל המאמנים",
+  "allLocations": "כל המיקומים",
+  "clearFilters": "נקה סינונים",
+  "noFilteredLessons": "אין שיעורים התואמים לסינון",
+  "noUpcomingLessons": "אין שיעורים קרובים"
 }

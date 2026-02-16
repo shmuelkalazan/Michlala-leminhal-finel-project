@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useAtomValue } from "jotai";
 import { authUserAtom } from "../../state/authAtom";
 import { getAuthHeaders } from "../../api/auth";
+import { API_URL } from "../../api/config";
 import styles from "./AdminDashboard.module.scss";
-
-const BASE = "http://localhost:3000";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -16,7 +15,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (user?.role !== "admin") return setError(t("adminAccessRequired"));
-    fetch(`${BASE}/admin/dashboard`, { headers: getAuthHeaders() })
+    fetch(`${API_URL}/admin/dashboard`, { headers: getAuthHeaders() })
       .then((r) => {
         if (!r.ok) throw new Error(r.statusText);
         return r.json();
@@ -43,29 +42,49 @@ const AdminDashboard = () => {
           <strong> {t("totalBranches")}:</strong> {data.totals?.totalBranches}
         </p>
       </div>
-      <div className={styles.sectionCard}>
-        <h3 className={styles.sectionTitle}>{t("branchesOccupancy")}</h3>
-        <ul className={styles.list}>
-          {(data.branchesOccupancy || []).map((b: any) => (
-            <li key={b._id}>{b.name}: {b.activeRegistrations}</li>
-          ))}
-        </ul>
-      </div>
-      <div className={styles.sectionCard}>
-        <h3 className={styles.sectionTitle}>{t("trainersOccupancy")}</h3>
-        <ul className={styles.list}>
-          {(data.trainersOccupancy || []).map((trainer: any) => (
-            <li key={trainer.trainerId}>{trainer.trainerName}: {t("students")} {trainer.studentsCount} / {t("lessons")} {trainer.lessonsCount}</li>
-          ))}
-        </ul>
-      </div>
-      <div className={styles.sectionCard}>
-        <h3 className={styles.sectionTitle}>{t("usersLessonCounts")}</h3>
-        <ul className={styles.list}>
-          {(data.usersLessons || []).slice(0, 10).map((u: any) => (
-            <li key={u._id}>{u.name} ({u.role}): {u.lessonsCount}</li>
-          ))}
-        </ul>
+      <div className={styles.cardsGrid}>
+        <div className={styles.sectionCard}>
+          <h3 className={styles.sectionTitle}>{t("branchesOccupancy")}</h3>
+          <ul className={styles.list}>
+            {(data.branchesOccupancy || []).map((b: any, index: number) => (
+              <li key={b._id || index}>
+                <strong>{b.name}</strong>
+                <div className={styles.branchInfo}>
+                  <span>{t("students")}: {b.activeRegistrations}</span>
+                  <span>{t("lessons")}: {b.lessonsCount || 0}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className={styles.sectionCard}>
+          <h3 className={styles.sectionTitle}>{t("trainersOccupancy")}</h3>
+          <ul className={styles.list}>
+            {(data.trainersOccupancy || []).map((trainer: any) => (
+              <li key={trainer.trainerId}>
+                <strong>{trainer.trainerName}</strong>
+                <div className={styles.trainerInfo}>
+                  <span>{t("students")}: {trainer.studentsCount}</span>
+                  <span>{t("lessons")}: {trainer.lessonsCount}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className={styles.sectionCard}>
+          <h3 className={styles.sectionTitle}>{t("usersLessonCounts")}</h3>
+          <ul className={styles.list}>
+            {(data.usersLessons || []).slice(0, 10).map((u: any) => (
+              <li key={u._id}>
+                <strong>{u.name}</strong>
+                <div className={styles.userInfo}>
+                  <span>{u.role}</span>
+                  <span>{t("lessons")}: {u.lessonsCount}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

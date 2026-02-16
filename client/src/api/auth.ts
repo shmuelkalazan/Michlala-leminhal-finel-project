@@ -1,7 +1,7 @@
+import { API_URL } from "./config";
+
 type Credentials = { email: string; password: string };
 type SignupPayload = Credentials & { name: string };
-
-const BASE_URL = "http://localhost:3000";
 
 /**
  * Handle API response and parse JSON
@@ -25,7 +25,7 @@ const handleResponse = async (res: Response) => {
 };
 
 export const signup = async (payload: SignupPayload) => {
-  const response = await fetch(`${BASE_URL}/users/signup`, {
+  const response = await fetch(`${API_URL}/users/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -42,7 +42,7 @@ export const signup = async (payload: SignupPayload) => {
 };
 
 export const login = async (payload: Credentials) => {
-  const response = await fetch(`${BASE_URL}/users/login`, {
+  const response = await fetch(`${API_URL}/users/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -80,7 +80,7 @@ export const getAuthHeaders = (): HeadersInit => {
 };
 
 export const getCurrentUser = async () => {
-  const response = await fetch(`${BASE_URL}/users/me`, {
+  const response = await fetch(`${API_URL}/users/me`, {
     headers: getAuthHeaders(),
   });
   

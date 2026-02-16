@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useAtomValue } from "jotai";
 import { authUserAtom } from "../../state/authAtom";
 import { getAuthHeaders } from "../../api/auth";
+import { API_URL } from "../../api/config";
 import styles from "./BranchesAdmin.module.scss";
-
-const BASE = "http://localhost:3000";
 
 const BranchesAdmin = () => {
   const { t } = useTranslation();
@@ -17,7 +16,7 @@ const BranchesAdmin = () => {
   const [error, setError] = useState("");
 
   const load = () =>
-    fetch(`${BASE}/branches`, { headers: getAuthHeaders() })
+    fetch(`${API_URL}/branches`, { headers: getAuthHeaders() })
       .then((r) => r.json())
       .then(setBranches)
       .catch((e) => setError(e.message || t("loadFailed")));
@@ -52,7 +51,7 @@ const BranchesAdmin = () => {
         ...(latitude !== undefined && longitude !== undefined ? { latitude, longitude } : {}),
       };
       
-      const url = editId ? `${BASE}/branches/${editId}` : `${BASE}/branches`;
+      const url = editId ? `${API_URL}/branches/${editId}` : `${API_URL}/branches`;
       const method = editId ? "PUT" : "POST";
       await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(payload) }).then((r) => r.json());
       setForm({ name: "", address: "", phone: "", location: "" });
@@ -64,7 +63,7 @@ const BranchesAdmin = () => {
   };
 
   const remove = async (id: string) => {
-    await fetch(`${BASE}/branches/${id}`, { method: "DELETE", headers: getAuthHeaders() }).then((r) => r.json());
+    await fetch(`${API_URL}/branches/${id}`, { method: "DELETE", headers: getAuthHeaders() }).then((r) => r.json());
     load();
   };
 

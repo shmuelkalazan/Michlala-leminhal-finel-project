@@ -1,9 +1,7 @@
 .lessonsContainer {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 1.5rem;
+  flex-direction: column;
+  gap: 2rem;
   padding: 2rem;
   color: #fff;
   max-width: 1400px;
@@ -20,6 +18,102 @@
   
   &::-webkit-scrollbar {
     display: none; // Chrome, Safari, Opera
+  }
+}
+
+.lessonsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.filtersContainer {
+  background: #1c1c1c;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  padding: 1.5rem;
+  border: 1px solid #3a3a3a;
+}
+
+.filtersTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #f5c518;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #3a3a3a;
+}
+
+.filtersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  align-items: end;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filterLabel {
+  color: #ccc;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.filterSelect,
+.filterInput {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #3a3a3a;
+  background: #2b2b2b;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #f5c518;
+    box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.2);
+  }
+
+  &:hover {
+    border-color: #4a4a4a;
+  }
+}
+
+.filterSelect {
+  cursor: pointer;
+}
+
+.filterInput {
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+  }
+}
+
+.clearFiltersBtn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(245, 101, 101, 0.45);
+  background: rgba(245, 101, 101, 0.12);
+  color: #f56565;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  align-self: end;
+
+  &:hover {
+    border-color: rgba(245, 101, 101, 0.8);
+    background: rgba(245, 101, 101, 0.18);
+    transform: translateY(-1px);
   }
 }
 

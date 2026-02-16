@@ -87,13 +87,29 @@
   }
 }
 
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
 .sectionCard {
   background: #1c1c1c;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
   padding: 1.5rem;
-  margin-bottom: 2rem;
   border: 1px solid #3a3a3a;
+  display: flex;
+  flex-direction: column;
 }
 
 .sectionTitle {
@@ -109,6 +125,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  flex: 1;
 
   li {
     padding: 0.75rem;
@@ -119,9 +136,31 @@
     color: #ccc;
     transition: all 0.2s ease;
 
+    strong {
+      color: #f5c518;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
     &:hover {
       border-color: #f5c518;
       transform: translateX(4px);
     }
+  }
+}
+
+.branchInfo,
+.trainerInfo,
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: #aaa;
+
+  span {
+    display: flex;
+    align-items: center;
   }
 }

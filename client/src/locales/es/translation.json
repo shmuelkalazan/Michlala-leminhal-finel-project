@@ -47,6 +47,8 @@
   "loginRequired": "Se requiere inicio de sesión",
   "upcoming": "Próximos",
   "completed": "Completados",
+  "upcomingLessons": "Lecciones Próximas",
+  "pastLessons": "Lecciones Pasadas",
   "classOccupancy": "Ocupación de la clase",
   "title": "Título",
   "startTime": "Hora de inicio",
@@ -118,5 +120,11 @@
   "locationAccessDenied": "No se puede obtener tu ubicación. Por favor, permite el acceso a la ubicación en tu navegador.",
   "locationPermissionHint": "Puedes permitir el acceso a la ubicación en la configuración de tu navegador",
   "latitude": "Latitud",
-  "longitude": "Longitud"
+  "longitude": "Longitud",
+  "filterLessons": "Filtrar Lecciones",
+  "allCoaches": "Todos los Entrenadores",
+  "allLocations": "Todas las Ubicaciones",
+  "clearFilters": "Limpiar Filtros",
+  "noFilteredLessons": "No hay lecciones que coincidan con los filtros",
+  "noUpcomingLessons": "No hay lecciones próximas"
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as userService from "../services/userServic.js";
-import mongoose from "mongoose";
+import { generateToken } from "../services/jwtService.js";
 import { AppError } from "../utils/appError.js";
 
 /**
@@ -75,8 +75,6 @@ export const createUserController = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Name, email, and password are required" });
     }
     const newUser = await userService.registerUser({ name, email, password, role });
-    
-    const { generateToken } = await import('../services/jwtService.js');
     const token = generateToken(newUser.id, newUser.role);
     
     res.status(201).json({
@@ -132,8 +130,6 @@ export const loginController = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Email and password are required" });
     }
     const user = await userService.authenticateUser(email, password);
-    
-    const { generateToken } = await import('../services/jwtService.js');
     const token = generateToken(user.id, user.role);
     
     res.status(200).json({

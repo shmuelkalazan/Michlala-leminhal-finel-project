@@ -28,21 +28,6 @@ const toAuthUser = (user: IUser): AuthUser => ({
   preferredLanguage: user.preferredLanguege || "en",
 });
 
-export const createUser = async (data: {
-  name: string;
-  email: string;
-  password: string;
-  role?: string;
-}): Promise<IUser> => {
-  const hashedPassword = await bcrypt.hash(data.password, 10);
-  const user = new User({
-    ...data,
-    role: (data.role as IUser["role"]) || "user",
-    password: hashedPassword,
-  });
-  return await user.save();
-};
-
 /**
  * Register a new user
  * Checks for existing email and returns AuthUser format
@@ -156,21 +141,6 @@ export const deleteUser = async (id: string): Promise<IUser | null> => {
   }
 
   return await User.findByIdAndDelete(id);
-};
-
-/**
- * Login user (legacy method)
- * @deprecated Use authenticateUser instead
- */
-export const loginUser = async (
-  email: string,
-  password: string
-): Promise<IUser | null> => {
-  const user = await User.findOne({ email }).select("+password");
-  if (!user) return null;
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return null;
-  return user;
 };
 
 /**
