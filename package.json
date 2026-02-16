@@ -1,0 +1,15 @@
+{
+  "name": "michlala-leminhal",
+  "private": true,
+  "description": "Single entry point to run the full project",
+  "scripts": {
+    "sync-env": "npx shx cp .env client/.env",
+    "dev": "npm run sync-env && concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix server && npm run build --prefix client",
+    "start": "npm run build && npm run start --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "shx": "^0.3.4"
+  }
+}
