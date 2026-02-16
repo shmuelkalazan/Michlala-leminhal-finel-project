@@ -1,31 +1,80 @@
-import React from "react";
+import { FormEvent, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useSetAtom } from "jotai";
+import { useTranslation } from "react-i18next";
+import { authUserAtom, currentLanguageAtom } from "../../../state/authAtom";
+import { login } from "../../../api/auth";
 import styles from "./login.module.scss";
+const Login = () => {
+  const { t, i18n } = useTranslation();
+  const setUser = useSetAtom(authUserAtom);
+  const setCurrentLanguage = useSetAtom(currentLanguageAtom);
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState(""); const [loading, setLoading] = useState(false);
 
-const Login: React.FC = () => {
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    setError(""); setLoading(true);
+    try {
+      const data = await login(form);
+      // Login returns { user, token } - token is saved in localStorage
+      if (!data || (!data.user && !data.id)) {
+        throw new Error(t("loginFailed") || "Login failed - invalid response");
+      }
+      const user = data.user || data;
+      if (!user.id || !user.email || !user.name) {
+        throw new Error(t("loginFailed") || "Login failed - invalid user data");
+      }
+      setUser(user);
+      if (user.preferredLanguage) {
+        i18n.changeLanguage(user.preferredLanguage);
+        setCurrentLanguage(user.preferredLanguage);
+      }
+      navigate("/");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("loginFailed"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles.loginPage}>
       <div className={styles.loginCard}>
-        <h1>Login</h1>
-        <p className={styles.subtitle}>
-          Welcome back! Please login to your account
-        </p>
+        <h1>{t("login")}</h1>
+        <p className={styles.subtitle}>{t("welcomeBack")}</p>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
-            <input type="email" placeholder="Email address" />
+            <input
+              type="email"
+              placeholder={t("emailAddress")}
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              required
+            />
           </div>
 
           <div className={styles.inputGroup}>
-            <input type="password" placeholder="Password" />
+            <input
+              type="password"
+              placeholder={t("password")}
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              required
+            />
           </div>
 
-          <button className={styles.loginBtn} type="submit">
-            Login
+          {error && <p className={`${styles.subtitle} ${styles.error}`}>{error}</p>}
+
+          <button className={styles.loginBtn} type="submit" disabled={loading}>
+            {loading ? t("loading") : t("login")}
           </button>
         </form>
 
         <p className={styles.register}>
-          Don’t have an account? <span>Sign up</span>
+          {t("dontHaveAccount")} <Link to="/signup">{t("signUp")}</Link>
         </p>
       </div>
     </div>

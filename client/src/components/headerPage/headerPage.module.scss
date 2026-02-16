@@ -1,8 +1,4 @@
 .headerPageContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
   height: 70px;
   max-height: 70px;
   padding: 10px 20px;
@@ -10,10 +6,186 @@
   border-radius: 20px;
   background-color: #111;
   color: #fff;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  gap: 20px;
+  z-index: 1;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+  margin-right: 5px;
+  z-index: 2;
+}
+
+.logo {
+  height: 45px;
+  max-width: 140px;
+  width: auto;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+
+  &:hover {
+    transform: scale(1.08);
+    filter: brightness(1.1);
+  }
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  gap: 15px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  margin-right: 10px;
+}
+
+.userName {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.userRole {
+  color: #f5c518;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .welcomeText {
   color: #ffeb3b;
   font-size: 1rem;
   font-weight: 500;
+}
+
+// Hamburger button - hidden on desktop
+.hamburgerButton {
+  display: none;
+}
+
+// Overlay - hidden on desktop
+.overlay {
+  display: none;
+}
+
+// Mobile styles
+@media (max-width: 768px) {
+  .headerPageContainer {
+    left: 10px;
+    right: 10px;
+    padding: 10px 15px;
+    
+    // Center logo on mobile (outside of leftSection)
+    .logoLink {
+      position: absolute !important;
+      left: 50% !important;
+      top: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      z-index: 1003 !important; // Higher than hamburger (1002) to ensure it's visible
+      margin-right: 0 !important;
+      display: flex !important;
+      width: auto !important;
+    }
+  }
+
+  .leftSection {
+    left: 15px;
+    gap: 10px;
+    
+    // Hide logo from leftSection on mobile (it will be centered separately)
+    .logoLink {
+      display: none !important;
+    }
+  }
+
+  .logo {
+    height: 35px;
+    max-width: 110px;
+  }
+
+  .userInfo {
+    display: none; // Hide user info on mobile to save space
+  }
+
+  .rightSection {
+    right: 15px;
+    gap: 10px;
+  }
+
+  // Show hamburger button on mobile
+  .hamburgerButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1002; // Lower than logo to ensure logo is visible
+
+    span {
+      width: 100%;
+      height: 3px;
+      background-color: #fff;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    &:hover span {
+      background-color: #ffeb3b;
+    }
+  }
+
+  // Show overlay on mobile when sidebar is open
+  .overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 280px; // Start after sidebar width
+    width: calc(100vw - 280px);
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    animation: fadeIn 0.3s ease;
+    pointer-events: auto;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }

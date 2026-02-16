@@ -1,5 +1,6 @@
 .loginPage {
-  height: 100vh;
+  height: 100%;
+  min-height: 80vh;
   background: linear-gradient(
       rgba(0, 0, 0, 0.75),
       rgba(0, 0, 0, 0.75)
@@ -9,6 +10,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
+  
+  // Hide scrollbar but keep scrolling functionality
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE and Edge
+  
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
 }
 
 .loginCard {
@@ -19,6 +32,7 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
   color: #fff;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .subtitle {
@@ -27,8 +41,17 @@
   margin-bottom: 24px;
 }
 
+form {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
 .inputGroup {
   margin-bottom: 16px;
+  width: 100%;
+  box-sizing: border-box;
 
   input {
     width: 100%;
@@ -38,6 +61,7 @@
     background: #2b2b2b;
     color: #fff;
     font-size: 14px;
+    box-sizing: border-box;
 
     &::placeholder {
       color: #aaa;
@@ -71,6 +95,7 @@
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .register {
@@ -83,4 +108,8 @@
     cursor: pointer;
     font-weight: bold;
   }
+}
+
+.error {
+  color: #f56565;
 }

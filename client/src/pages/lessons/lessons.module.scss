@@ -1,86 +1,252 @@
 .lessonsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1.5rem;
-    padding: 2rem;
-    color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  color: #fff;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
+  
+  // Hide scrollbar but keep scrolling functionality
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE and Edge
+  
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
   }
-  
-  .lessonCard {
-    background-color: #ffeb3b;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    transition: transform 0.2s ease;
-    border: 1px solid #e0e0e0;
-    flex: 1 1 280px;
-    max-width: 360px;
-  
-    &:hover {
-      transform: translateY(-4px);
+}
+
+.lessonsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.filtersContainer {
+  background: #1c1c1c;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  padding: 1.5rem;
+  border: 1px solid #3a3a3a;
+}
+
+.filtersTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #f5c518;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #3a3a3a;
+}
+
+.filtersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  align-items: end;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filterLabel {
+  color: #ccc;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.filterSelect,
+.filterInput {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #3a3a3a;
+  background: #2b2b2b;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #f5c518;
+    box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.2);
+  }
+
+  &:hover {
+    border-color: #4a4a4a;
+  }
+}
+
+.filterSelect {
+  cursor: pointer;
+}
+
+.filterInput {
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+  }
+}
+
+.clearFiltersBtn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(245, 101, 101, 0.45);
+  background: rgba(245, 101, 101, 0.12);
+  color: #f56565;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  align-self: end;
+
+  &:hover {
+    border-color: rgba(245, 101, 101, 0.8);
+    background: rgba(245, 101, 101, 0.18);
+    transform: translateY(-1px);
+  }
+}
+
+.lessonCard {
+  background: #1c1c1c;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #3a3a3a;
+  flex: 1 1 280px;
+  max-width: 360px;
+  color: #fff;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.8);
+  }
+}
+
+.lessonHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.lessonTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #fff;
+}
+
+.lessonType {
+  background: #2b2b2b;
+  color: #f5c518;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-weight: 500;
+  border: 1px solid #3a3a3a;
+}
+
+.lessonInfo {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  color: #ccc;
+
+  p {
+    margin: 0.5rem 0;
+    
+    strong {
+      color: #f5c518;
+      margin-right: 0.5rem;
     }
   }
-  
-  .lessonHeader {
-    background-color: #ffeb3b;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+}
+
+.lessonStudents {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: #ccc;
+
+  strong {
+    color: #f5c518;
+    display: block;
+    margin-bottom: 0.5rem;
   }
-  
-  .lessonTitle {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0;
-  }
-  
-  .lessonType {
-    background: #f0f0f0;
-    color: #333;
-    font-size: 0.85rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-  }
-  
-  .lessonInfo {
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
-  
-    p {
+
+  ul {
+    margin-top: 0.5rem;
+    padding-left: 1.25rem;
+    list-style: none;
+
+    li {
       margin: 0.25rem 0;
-    }
-  }
-  
-  .lessonStudents {
-    font-size: 0.9rem;
-  
-    ul {
-      margin-top: 0.25rem;
-      padding-left: 1.25rem;
-  
-      li {
-        list-style-type: disc;
-        margin: 0.15rem 0;
+      color: #aaa;
+      padding-left: 1rem;
+      position: relative;
+
+      &::before {
+        content: "•";
+        color: #f5c518;
+        position: absolute;
+        left: 0;
       }
     }
   }
-  
-  .noStudents {
-    color: #888;
-    margin-top: 0.25rem;
+}
+
+.noStudents {
+  color: #888;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #f5c518, #ffdd55);
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 1rem;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 197, 24, 0.4);
   }
-  
-  .lessonsLoading,
-  .lessonsError {
-    text-align: center;
-    padding: 2rem;
-    font-size: 1.1rem;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
-  
-  .lessonsError {
-    color: #c00;
-  }
-  
+}
+
+.lessonsLoading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.lessonsError {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #f56565;
+}

@@ -1,0 +1,50 @@
+.container {
+  color: #fff;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
+  
+  // Hide scrollbar but keep scrolling functionality
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE and Edge
+  
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  text-align: center;
+}
+
+.error {
+  color: #f56565;
+  background: rgba(245, 101, 101, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(245, 101, 101, 0.3);
+}
+
+.loading {
+  color: #fff;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+.emptyState {
+  color: #888;
+  text-align: center;
+  padding: 2rem;
+  font-style: italic;
+}

@@ -1,0 +1,24 @@
+.lessonsCard {
+  background: #1c1c1c;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #3a3a3a;
+}
+
+.sectionTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #f5c518;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #3a3a3a;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}

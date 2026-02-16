@@ -1,20 +1,62 @@
 .homePage {
-  min-height: 100vh;
+  min-height: 100%;
+  height: 800px;
   background: #1a1a1a;
   color: #ffffff;
-  padding: 80px 20px;
+  padding: 20px;
   font-family: "Segoe UI", sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
+  
+  // Hide scrollbar but keep scrolling functionality
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE and Edge
+  
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   text-align: center;
 
   h1 {
     font-size: 36px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     color: #f5c518;
+  }
+}
+
+.contentWrapper {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.leftContent {
+  flex: 1;
+  min-width: 300px;
+  text-align: left;
+}
+
+.rightContent {
+  flex: 0 0 auto;
+  min-width: 300px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 }
 
@@ -22,6 +64,7 @@
   font-size: 16px;
   color: #cccccc;
   margin-bottom: 40px;
+  text-align: left;
 }
 
 .heroCard {

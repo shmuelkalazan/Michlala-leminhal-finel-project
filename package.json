@@ -5,7 +5,7 @@
   "scripts": {
     "sync-env": "npx shx cp .env client/.env",
     "dev": "npm run sync-env && concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
-    "build": "npm run build --prefix server && npm run build --prefix client",
+    "build": "npm run build --prefix server && npm run sync-env && npm run build --prefix client",
     "start": "npm run build && npm run start --prefix server"
   },
   "devDependencies": {

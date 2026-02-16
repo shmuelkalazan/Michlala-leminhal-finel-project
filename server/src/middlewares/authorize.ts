@@ -1,16 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 
-export const authorize = (...allowedRoles: Array<"admin" | "coach" | "student">) => {
+/**
+ * Authorization middleware
+ * Checks if user has one of the allowed roles
+ */
+export const authorize = (...allowedRoles: Array<"admin" | "trainer" | "user">) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
-
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-
+    
     if (!allowedRoles.includes(user.role)) {
       return res.status(403).json({ message: "Forbidden" });
     }
+    
     next();
   };
 };

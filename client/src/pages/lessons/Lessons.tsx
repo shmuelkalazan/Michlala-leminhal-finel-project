@@ -1,71 +1,80 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useAtomValue } from "jotai";
+import { authUserAtom } from "../../state/authAtom";
+import { Student } from "../../types/interface";
+import { useLessons } from "./useLessons";
+import LessonsFilters from "./LessonsFilters";
+import LessonCard from "./LessonCard";
 import styles from "./lessons.module.scss";
-import {Student, Lesson } from "../../types/interface";
 
 const Lessons: React.FC = () => {
-  const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
+  const user = useAtomValue(authUserAtom);
+  const {
+    lessons: filteredLessons,
+    futureLessons,
+    loading,
+    error,
+    busyId,
+    selectedCoach,
+    selectedBranch,
+    selectedDate,
+    uniqueCoaches,
+    uniqueBranches,
+    setSelectedCoach,
+    setSelectedBranch,
+    setSelectedDate,
+    handleToggle,
+    clearFilters,
+  } = useLessons(user);
 
-  const API_URL = "http://localhost:3000/lessons";
+  const isUser = user?.role === "user";
 
-  useEffect(() => {
-    async function fetchLessons() {
-      try {
-        const res = await fetch(API_URL);
-        if (!res.ok) throw new Error("Failed to fetch lessons");
-        const data = await res.json();
-        setLessons(data);
-      } catch (err: any) {
-        setError(err.message || "Something went wrong");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchLessons();
-  }, []);
-
-  if (loading) return <div className={styles.lessonsLoading}>Loading lessons...</div>;
-  if (error) return <div className={styles.lessonsError}>{error}</div>;
+  if (loading) return <div className={styles.lessonsLoading}>{t("loadingLessons")}</div>;
 
   return (
     <div className={styles.lessonsContainer}>
-      {lessons.map((lesson) => (
-        <div key={lesson._id} className={styles.lessonCard}>
-          <div className={styles.lessonHeader}>
-            <h2 className={styles.lessonTitle}>{lesson.name}</h2>
-            <span className={styles.lessonType}>{lesson.type}</span>
-          </div>
+      {error && <div className={styles.lessonsError}>{error}</div>}
 
-          <div className={styles.lessonInfo}>
-            <p>
-              <strong>Coach:</strong> {lesson.coachName}
-            </p>
-            <p>
-              <strong>Date:</strong> {new Date(lesson.date).toLocaleDateString()}
-            </p>
-            <p>
-              <strong>Time:</strong> {lesson.time}
-            </p>
-          </div>
+      <LessonsFilters
+        selectedCoach={selectedCoach}
+        selectedBranch={selectedBranch}
+        selectedDate={selectedDate}
+        uniqueCoaches={uniqueCoaches}
+        uniqueBranches={uniqueBranches}
+        onCoachChange={setSelectedCoach}
+        onBranchChange={setSelectedBranch}
+        onDateChange={setSelectedDate}
+        onClearFilters={clearFilters}
+      />
 
-          <div className={styles.lessonStudents}>
-            <strong>Students:</strong>
-            {lesson.students && lesson.students.length > 0 ? (
-              <ul>
-                {lesson.students.map((s:Student) => (
-                  <li key={s._id}>
-                    {s.name} – {s.email}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className={styles.noStudents}>No students enrolled</p>
-            )}
-          </div>
+      {!loading && filteredLessons.length === 0 && !error && (
+        <div className={styles.lessonsError}>
+          {futureLessons.length === 0
+            ? t("noUpcomingLessons") || "אין שיעורים קרובים"
+            : t("noFilteredLessons") || "אין שיעורים התואמים לסינון"}
         </div>
-      ))}
+      )}
+
+      <div className={styles.lessonsGrid}>
+        {filteredLessons.map((lesson) => {
+          const enrolled = (lesson.students || []).some(
+            (s: Student) => s._id === user?.id || s.email === user?.email
+          );
+          return (
+            <LessonCard
+              key={lesson._id}
+              lesson={lesson}
+              user={user}
+              isUser={isUser}
+              enrolled={enrolled}
+              busy={busyId === lesson._id}
+              onToggle={handleToggle}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };
