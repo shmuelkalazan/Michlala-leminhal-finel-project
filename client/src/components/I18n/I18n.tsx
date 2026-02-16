@@ -2,9 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { authUserAtom, currentLanguageAtom } from '../../state/authAtom';
 import { getAuthHeaders } from '../../api/auth';
+import { API_URL } from '../../api/config';
 import styles from './I18n.module.scss';
-
-const BASE = "http://localhost:3000";
 
 const I18n = () => {
   const { i18n, t } = useTranslation();
@@ -17,7 +16,7 @@ const I18n = () => {
     setCurrentLanguage(lng);
     if (user?.id) {
       try {
-        await fetch(`${BASE}/users/${user.id}/language`, {
+        await fetch(`${API_URL}/users/${user.id}/language`, {
           method: "PUT",
           headers: getAuthHeaders(),
           body: JSON.stringify({ language: lng }),

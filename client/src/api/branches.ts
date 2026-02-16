@@ -1,9 +1,8 @@
 import { Branch } from "../types/interface";
-
-const BASE_URL = "http://localhost:3000";
+import { API_URL } from "./config";
 
 export const fetchBranches = async (): Promise<Branch[]> => {
-  const response = await fetch(`${BASE_URL}/branches/public`);
+  const response = await fetch(`${API_URL}/branches/public`);
   if (!response.ok) {
     throw new Error("Failed to fetch branches");
   }

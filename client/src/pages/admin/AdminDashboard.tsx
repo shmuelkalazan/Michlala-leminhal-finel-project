@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useAtomValue } from "jotai";
 import { authUserAtom } from "../../state/authAtom";
 import { getAuthHeaders } from "../../api/auth";
+import { API_URL } from "../../api/config";
 import styles from "./AdminDashboard.module.scss";
-
-const BASE = "http://localhost:3000";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -16,7 +15,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (user?.role !== "admin") return setError(t("adminAccessRequired"));
-    fetch(`${BASE}/admin/dashboard`, { headers: getAuthHeaders() })
+    fetch(`${API_URL}/admin/dashboard`, { headers: getAuthHeaders() })
       .then((r) => {
         if (!r.ok) throw new Error(r.statusText);
         return r.json();
