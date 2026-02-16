@@ -153,7 +153,7 @@ const seedDatabase = async () => {
     const lessonsToCreate = 300;
     const daysBetweenLessons = Math.floor(totalDays / lessonsToCreate);
     
-    const lessonTypes = ["group", "personal", "group", "group", "personal"]; // More group lessons
+    const lessonTypes = ["yoga", "pilates", "spinning", "aerobics", "crossfit"];
     const timeSlots = [
       { start: "08:00", end: "09:00" },
       { start: "10:00", end: "11:00" },
@@ -198,8 +198,8 @@ const seedDatabase = async () => {
       
       // Create lesson
       const lesson = await Lesson.create({
-        title: `${lessonType === "group" ? "שיעור קבוצתי" : "שיעור אישי"} ${i + 1} - ${branch.name}`,
-        description: `שיעור ${lessonType === "group" ? "קבוצתי" : "אישי"} עם ${trainer.name}`,
+        title: `שיעור ${lessonType} ${i + 1} - ${branch.name}`,
+        description: `שיעור ${lessonType} עם ${trainer.name}`,
         coachName: trainer.name,
         coachId: trainer._id,
         branchId: branch._id,
@@ -208,7 +208,7 @@ const seedDatabase = async () => {
         endTime: timeSlot.end,
         type: lessonType,
         students: lessonStudents.map(s => s?._id).filter(id => id !== undefined),
-        maxPatricipants: lessonType === "group" ? 10 : 1,
+        maxPatricipants: 10,
       });
 
       lessons.push(lesson);
