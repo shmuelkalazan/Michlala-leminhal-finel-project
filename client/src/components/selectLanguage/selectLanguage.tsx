@@ -18,8 +18,9 @@ const selectLanguage = () => {
                 onClick={() => setIsOpen(!isOpen)}
             />
             <ClickAwayListener onClickAway={() => setIsOpen(false)}>
-                <div></div>
-                {isOpen && <I18n />}
+                <div className={styles.dropdownWrapper}>
+                    {isOpen && <I18n onSelect={() => setIsOpen(false)} />}
+                </div>
             </ClickAwayListener>
         </div>
     );

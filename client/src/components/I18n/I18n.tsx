@@ -5,7 +5,11 @@ import { getAuthHeaders } from '../../api/auth';
 import { API_URL } from '../../api/config';
 import styles from './I18n.module.scss';
 
-const I18n = () => {
+interface I18nProps {
+  onSelect?: () => void;
+}
+
+const I18n = ({ onSelect }: I18nProps) => {
   const { i18n, t } = useTranslation();
   const user = useAtomValue(authUserAtom);
   const setUser = useSetAtom(authUserAtom);
@@ -27,21 +31,29 @@ const I18n = () => {
       } catch (e) {
       }
     }
+    onSelect?.();
   };
 
+  const languages = [
+    { value: "en", labelKey: "languageEnglish" },
+    { value: "he", labelKey: "languageHebrew" },
+    { value: "fr", labelKey: "languageFrench" },
+    { value: "es", labelKey: "languageSpanish" },
+    { value: "ar", labelKey: "languageArabic" },
+  ] as const;
+
   return (
-    <div>
-      <select
-        value={i18n.language}
-        onChange={(e) => changeLanguage(e.target.value)}
-        className={styles.select}
-      >
-        <option value="en">{t("languageEnglish")}</option>
-        <option value="he">{t("languageHebrew")}</option>
-        <option value="fr">{t("languageFrench")}</option>
-        <option value="es">{t("languageSpanish")}</option>
-        <option value="ar">{t("languageArabic")}</option>
-      </select>
+    <div className={styles.dropdown}>
+      {languages.map(({ value, labelKey }) => (
+        <button
+          key={value}
+          type="button"
+          className={`${styles.option} ${i18n.language === value ? styles.optionActive : ""}`}
+          onClick={() => changeLanguage(value)}
+        >
+          {t(labelKey)}
+        </button>
+      ))}
     </div>
   );
 };
