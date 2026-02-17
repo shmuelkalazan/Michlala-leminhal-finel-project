@@ -126,5 +126,7 @@
   "allLocations": "جميع المواقع",
   "clearFilters": "مسح المرشحات",
   "noFilteredLessons": "لا توجد دروس تطابق المرشحات",
-  "noUpcomingLessons": "لا توجد دروس قادمة"
+  "noUpcomingLessons": "لا توجد دروس قادمة",
+  "maxParticipants": "الحد الأقصى للمشاركين",
+  "lessonFull": "السعة ممتلئة"
 }

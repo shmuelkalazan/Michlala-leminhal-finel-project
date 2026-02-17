@@ -13,7 +13,7 @@ const TrainerLessons = () => {
   const user = useAtomValue(authUserAtom);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [branches, setBranches] = useState<Branch[]>([]);
-  const [form, setForm] = useState({ title: "", date: "", startTime: "", type: "", branchId: "" });
+  const [form, setForm] = useState({ title: "", date: "", startTime: "", type: "", branchId: "", maxParticipants: "" });
   const [editId, setEditId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const getCoachId = (l: Lesson) => (typeof l.coachId === "string" ? l.coachId : (l as any).coachId?._id);
@@ -42,7 +42,12 @@ const TrainerLessons = () => {
     if (!form.title || !form.date || !form.startTime || !form.branchId) {
       return setError(t("fillRequiredFields"));
     }
-    const payload = { ...form, coachId: user.id, coachName: user.name };
+    const payload = {
+      ...form,
+      coachId: user.id,
+      coachName: user.name,
+      maxParticipants: form.maxParticipants ? Number(form.maxParticipants) : undefined,
+    };
     try {
       if (editId) {
         const updated = await updateLesson(editId, payload);
@@ -51,7 +56,7 @@ const TrainerLessons = () => {
         const created = await createLesson(payload);
         setLessons((p) => [...p, created]);
       }
-      setForm({ title: "", date: "", startTime: "", type: "", branchId: "" });
+      setForm({ title: "", date: "", startTime: "", type: "", branchId: "", maxParticipants: "" });
       setEditId(null);
       setError("");
     } catch (e: any) {
@@ -71,8 +76,14 @@ const TrainerLessons = () => {
   };
 
   if (!user) return <div className={styles.loading}>{t("loginRequired")}</div>;
-  const upcoming = lessons.filter((l) => !isPast(l));
-  const done = lessons.filter((l) => isPast(l));
+  const getTimestamp = (l: Lesson) => {
+    const d = new Date(l.date as any);
+    const t = (l.startTime || l.time || "00:00").split(":");
+    d.setHours(Number(t[0]) || 0, Number(t[1]) || 0, 0, 0);
+    return d.getTime();
+  };
+  const upcoming = lessons.filter((l) => !isPast(l)).sort((a, b) => getTimestamp(a) - getTimestamp(b));
+  const done = lessons.filter((l) => isPast(l)).sort((a, b) => getTimestamp(b) - getTimestamp(a));
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>{t("trainerLessons")}</h2>
@@ -87,6 +98,13 @@ const TrainerLessons = () => {
             placeholder={t("startTime")}
           />
           <input placeholder={t("type")} value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} />
+          <input
+            type="number"
+            min="1"
+            placeholder={t("maxParticipants")}
+            value={form.maxParticipants}
+            onChange={(e) => setForm({ ...form, maxParticipants: e.target.value })}
+          />
           <select
             value={form.branchId}
             onChange={(e) => setForm({ ...form, branchId: e.target.value })}
@@ -112,7 +130,7 @@ const TrainerLessons = () => {
             <li key={l._id} className={styles.listItem}>
               <strong>{l.title || l.name}</strong>
               <span className={styles.lessonInfo}>
-                {new Date(l.date).toLocaleDateString()} {l.startTime || l.time || ""} | {t("students")}: {l.students?.length || 0}
+                {new Date(l.date).toLocaleDateString()} {l.startTime || l.time || ""} | {t("students")}: {l.students?.length || 0}{l.maxParticipants != null ? ` / ${l.maxParticipants}` : ""}
                 {l.branchId && typeof l.branchId === 'object' && (
                   <> | {t("location")}: {l.branchId.address} | {t("phone")}: {l.branchId.phone}</>
                 )}
@@ -120,7 +138,7 @@ const TrainerLessons = () => {
               <div className={styles.buttonGroup}>
                 <button className={styles.button} onClick={() => { 
                   const branchId = typeof l.branchId === "string" ? l.branchId : l.branchId?._id || "";
-                  setForm({ title: l.title || l.name || "", date: (l.date as string).slice(0,10), startTime: l.startTime || l.time || "", type: l.type || "", branchId }); 
+                  setForm({ title: l.title || l.name || "", date: (l.date as string).slice(0,10), startTime: l.startTime || l.time || "", type: l.type || "", branchId, maxParticipants: String(l.maxParticipants || "") }); 
                   setEditId(l._id || null); 
                 }}>{t("edit")}</button>
                 <button className={styles.button} onClick={() => handleDelete(l._id)}>{t("delete")}</button>
@@ -138,7 +156,7 @@ const TrainerLessons = () => {
             <li key={l._id} className={`${styles.listItem} ${styles.completed}`}>
               <strong>{l.title || l.name}</strong>
               <span className={styles.lessonInfo}>
-                {new Date(l.date).toLocaleDateString()} {l.startTime || l.time || ""} | {t("students")}: {l.students?.length || 0}
+                {new Date(l.date).toLocaleDateString()} {l.startTime || l.time || ""} | {t("students")}: {l.students?.length || 0}{l.maxParticipants != null ? ` / ${l.maxParticipants}` : ""}
                 {l.branchId && typeof l.branchId === 'object' && (
                   <> | {t("location")}: {l.branchId.address} | {t("phone")}: {l.branchId.phone}</>
                 )}
@@ -146,7 +164,7 @@ const TrainerLessons = () => {
               <div className={styles.buttonGroup}>
                 <button className={styles.button} onClick={() => { 
                   const branchId = typeof l.branchId === "string" ? l.branchId : l.branchId?._id || "";
-                  setForm({ title: l.title || l.name || "", date: (l.date as string).slice(0,10), startTime: l.startTime || l.time || "", type: l.type || "", branchId }); 
+                  setForm({ title: l.title || l.name || "", date: (l.date as string).slice(0,10), startTime: l.startTime || l.time || "", type: l.type || "", branchId, maxParticipants: String(l.maxParticipants || "") }); 
                   setEditId(l._id || null); 
                 }}>{t("edit")}</button>
                 <button className={styles.button} onClick={() => handleDelete(l._id)}>{t("delete")}</button>

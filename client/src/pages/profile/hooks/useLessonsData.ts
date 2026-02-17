@@ -32,19 +32,19 @@ export const useLessonsData = (lessons: Lesson[]): UseLessonsDataReturn => {
       }
     });
 
-    // Sort past lessons by date (newest first)
-    past.sort((a, b) => {
-      const dateA = a.date ? new Date(a.date).getTime() : 0;
-      const dateB = b.date ? new Date(b.date).getTime() : 0;
-      return dateB - dateA;
-    });
+    const getTimestamp = (l: Lesson) => {
+      const d = l.date ? new Date(l.date) : new Date(0);
+      const timeStr = l.startTime || l.time || "00:00";
+      const [h, m] = timeStr.split(":").map(Number);
+      d.setHours(h || 0, m || 0, 0, 0);
+      return d.getTime();
+    };
 
-    // Sort future lessons by date (oldest first)
-    future.sort((a, b) => {
-      const dateA = a.date ? new Date(a.date).getTime() : 0;
-      const dateB = b.date ? new Date(b.date).getTime() : 0;
-      return dateA - dateB;
-    });
+    // Sort past lessons by date+time (newest first)
+    past.sort((a, b) => getTimestamp(b) - getTimestamp(a));
+
+    // Sort future lessons by date+time (earliest first)
+    future.sort((a, b) => getTimestamp(a) - getTimestamp(b));
 
     return { pastLessons: past, futureLessons: future };
   }, [lessons]);

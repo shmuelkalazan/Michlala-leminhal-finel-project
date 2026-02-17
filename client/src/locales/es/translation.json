@@ -126,5 +126,7 @@
   "allLocations": "Todas las Ubicaciones",
   "clearFilters": "Limpiar Filtros",
   "noFilteredLessons": "No hay lecciones que coincidan con los filtros",
-  "noUpcomingLessons": "No hay lecciones próximas"
+  "noUpcomingLessons": "No hay lecciones próximas",
+  "maxParticipants": "Máximo de participantes",
+  "lessonFull": "La capacidad está llena"
 }

@@ -65,7 +65,7 @@ export const useLessons = (user: AuthUser | null) => {
   }, [futureLessons]);
 
   const filteredLessons = useMemo(() => {
-    return futureLessons.filter((lesson) => {
+    const filtered = futureLessons.filter((lesson) => {
       if (selectedCoach && lesson.coachName !== selectedCoach) return false;
 
       if (selectedBranch) {
@@ -84,6 +84,16 @@ export const useLessons = (user: AuthUser | null) => {
 
       return true;
     });
+
+    const getTimestamp = (l: Lesson) => {
+      const d = new Date(l.date);
+      const timeStr = l.startTime || l.time || "00:00";
+      const [h, m] = timeStr.split(":").map(Number);
+      d.setHours(h || 0, m || 0, 0, 0);
+      return d.getTime();
+    };
+
+    return [...filtered].sort((a, b) => getTimestamp(a) - getTimestamp(b));
   }, [futureLessons, selectedCoach, selectedBranch, selectedDate]);
 
   const handleToggle = async (lessonId?: string, isEnrolled?: boolean) => {
@@ -106,7 +116,8 @@ export const useLessons = (user: AuthUser | null) => {
         )
       );
     } catch (err: any) {
-      setError(err.message || t("updateFailed"));
+      const msg = err.message || "";
+      setError(msg.includes("capacity") || msg.includes("full") ? t("lessonFull") : (msg || t("updateFailed")));
     } finally {
       setBusyId(null);
     }

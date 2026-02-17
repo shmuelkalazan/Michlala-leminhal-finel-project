@@ -64,19 +64,27 @@ const LessonCard: React.FC<LessonCardProps> = ({
               <p className={styles.noStudents}>{t("noStudentsEnrolled")}</p>
             )
           ) : (
-            <span> {lesson.students?.length || 0}</span>
+            <span>
+              {" "}{lesson.students?.length || 0}
+              {lesson.maxParticipants != null && ` / ${lesson.maxParticipants}`}
+            </span>
           )}
         </div>
       )}
 
       {isUser && (
-        <button
-          className={styles.loginBtn}
-          onClick={() => onToggle(lesson._id, enrolled)}
-          disabled={busy}
-        >
-          {busy ? t("saving") : enrolled ? t("cancelRegistration") : t("registerBtn")}
-        </button>
+        <>
+          {!enrolled && lesson.maxParticipants != null && (lesson.students?.length || 0) >= lesson.maxParticipants && (
+            <p className={styles.lessonFull}>{t("lessonFull")}</p>
+          )}
+          <button
+            className={styles.loginBtn}
+            onClick={() => onToggle(lesson._id, enrolled)}
+            disabled={busy || (!enrolled && lesson.maxParticipants != null && (lesson.students?.length || 0) >= lesson.maxParticipants)}
+          >
+            {busy ? t("saving") : enrolled ? t("cancelRegistration") : t("registerBtn")}
+          </button>
+        </>
       )}
     </div>
   );

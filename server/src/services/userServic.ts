@@ -125,7 +125,8 @@ export const setUserLanguage = async (
 
 /**
  * Delete a user
- * Removes user from all enrolled lessons
+ * - If trainer: deletes all their lessons and removes those lessons from enrolled users
+ * - Otherwise: removes user from all enrolled lessons
  */
 export const deleteUser = async (id: string): Promise<IUser | null> => {
   if (!mongoose.Types.ObjectId.isValid(id)) return null;
@@ -133,7 +134,23 @@ export const deleteUser = async (id: string): Promise<IUser | null> => {
   const user = await User.findById(id);
   if (!user) return null;
 
-  if (user.lessons && user.lessons.length > 0) {
+  if (user.role === "trainer") {
+    const trainerLessons = await Lesson.find({ coachId: id });
+    const lessonIds = trainerLessons.map((l) => l._id);
+
+    if (lessonIds.length > 0) {
+      for (const lesson of trainerLessons) {
+        const studentIds = lesson.students || [];
+        if (studentIds.length > 0) {
+          await User.updateMany(
+            { _id: { $in: studentIds } },
+            { $pull: { lessons: lesson._id } }
+          );
+        }
+      }
+      await Lesson.deleteMany({ _id: { $in: lessonIds } });
+    }
+  } else if (user.lessons && user.lessons.length > 0) {
     await Lesson.updateMany(
       { _id: { $in: user.lessons } },
       { $pull: { students: user._id } }
@@ -164,6 +181,7 @@ export const authenticateUser = async (
 /**
  * Add a lesson to user's enrolled lessons
  * Also adds user to lesson's students array
+ * Throws AppError if lesson capacity is full
  */
 export const addLessonToUser = async (
   userId: string,
@@ -171,6 +189,15 @@ export const addLessonToUser = async (
 ): Promise<IUser | null> => {
   if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(lessonId)) {
     return null;
+  }
+
+  const lesson = await Lesson.findById(lessonId);
+  if (!lesson) return null;
+
+  const currentCount = (lesson.students || []).length;
+  const maxParticipants = lesson.maxParticipants;
+  if (maxParticipants != null && currentCount >= maxParticipants) {
+    throw new AppError("Lesson capacity is full", 400);
   }
 
   const updatedUser = await User.findByIdAndUpdate(
