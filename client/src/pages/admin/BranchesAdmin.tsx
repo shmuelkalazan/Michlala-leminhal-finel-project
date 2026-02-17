@@ -89,7 +89,7 @@ const BranchesAdmin = () => {
         </div>
       </div>
       <ul className={styles.list}>
-        {branches.map((b) => (
+        {[...branches].sort((a: any, b: any) => (a.name || "").localeCompare(b.name || "")).map((b) => (
           <li key={b._id} className={styles.listItem}>
             <strong>{b.name}</strong>
             <span className={styles.branchInfo}>{b.address} ({b.phone})</span>
