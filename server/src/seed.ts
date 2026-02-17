@@ -174,8 +174,12 @@ const seedDatabase = async () => {
       const branch = branches[Math.floor(Math.random() * branches.length)];
       if (!branch) continue;
       
-      // Assign 2-8 students to each lesson (random)
-      const numStudents = 2 + Math.floor(Math.random() * 7);
+      // Some lessons (about 25%) have full capacity
+      const isFullCapacity = Math.random() < 0.25;
+      const maxParticipants = 8 + Math.floor(Math.random() * 5); // 8-12
+      const numStudents = isFullCapacity
+        ? maxParticipants
+        : 2 + Math.floor(Math.random() * (maxParticipants - 2)); // 2 to max-1 for non-full
       const lessonStudents: any[] = [];
       const shuffledUsers = [...allUsers].sort(() => Math.random() - 0.5);
       
@@ -208,7 +212,7 @@ const seedDatabase = async () => {
         endTime: timeSlot.end,
         type: lessonType,
         students: lessonStudents.map(s => s?._id).filter(id => id !== undefined),
-        maxPatricipants: 10,
+        maxParticipants,
       });
 
       lessons.push(lesson);

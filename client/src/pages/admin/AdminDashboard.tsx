@@ -46,7 +46,7 @@ const AdminDashboard = () => {
         <div className={styles.sectionCard}>
           <h3 className={styles.sectionTitle}>{t("branchesOccupancy")}</h3>
           <ul className={styles.list}>
-            {(data.branchesOccupancy || []).map((b: any, index: number) => (
+            {[...(data.branchesOccupancy || [])].sort((a: any, b: any) => (a.name || "").localeCompare(b.name || "")).map((b: any, index: number) => (
               <li key={b._id || index}>
                 <strong>{b.name}</strong>
                 <div className={styles.branchInfo}>
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
         <div className={styles.sectionCard}>
           <h3 className={styles.sectionTitle}>{t("trainersOccupancy")}</h3>
           <ul className={styles.list}>
-            {(data.trainersOccupancy || []).map((trainer: any) => (
+            {[...(data.trainersOccupancy || [])].sort((a: any, b: any) => (a.trainerName || "").localeCompare(b.trainerName || "")).map((trainer: any) => (
               <li key={trainer.trainerId}>
                 <strong>{trainer.trainerName}</strong>
                 <div className={styles.trainerInfo}>

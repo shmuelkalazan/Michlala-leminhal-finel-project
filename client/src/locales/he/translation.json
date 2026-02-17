@@ -126,5 +126,7 @@
   "allLocations": "כל המיקומים",
   "clearFilters": "נקה סינונים",
   "noFilteredLessons": "אין שיעורים התואמים לסינון",
-  "noUpcomingLessons": "אין שיעורים קרובים"
+  "noUpcomingLessons": "אין שיעורים קרובים",
+  "maxParticipants": "מקסימום משתתפים",
+  "lessonFull": "התפוסה מלאה"
 }

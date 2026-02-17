@@ -160,6 +160,9 @@ export const addLessonController = async (req: Request, res: Response) => {
     if (!updatedUser) return res.status(404).json({ message: "User not found" });
     res.status(200).json(updatedUser);
   } catch (error) {
+    if (error instanceof AppError) {
+      return res.status(error.status).json({ message: error.message });
+    }
     res.status(500).json({ message: "Error adding lesson to user", error });
   }
 };

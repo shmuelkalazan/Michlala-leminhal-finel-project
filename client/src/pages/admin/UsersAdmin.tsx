@@ -18,7 +18,15 @@ const UsersAdmin = () => {
   const load = () =>
     fetch(`${API_URL}/users`, { headers: getAuthHeaders() })
       .then((r) => r.json())
-      .then(setUsers)
+      .then((data) => {
+        const roleOrder: Record<string, number> = { admin: 0, trainer: 1, user: 2 };
+        return setUsers((data || []).sort((a: any, b: any) => {
+          const roleA = roleOrder[a.role] ?? 3;
+          const roleB = roleOrder[b.role] ?? 3;
+          if (roleA !== roleB) return roleA - roleB;
+          return (a.name || "").localeCompare(b.name || "");
+        }));
+      })
       .catch((e) => setError(e.message || t("loadFailed")));
 
   useEffect(() => {

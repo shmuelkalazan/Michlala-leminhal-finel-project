@@ -17,6 +17,7 @@ export interface Lesson {
   time?: string;
   type?: string;
   students?: Student[];
+  maxParticipants?: number;
   __v?: number;
 }
 

@@ -11,7 +11,7 @@ export interface ILesson extends Document {
   endTime?: string;
   type?: string;
   students?: mongoose.Types.ObjectId[];
-  maxPatricipants?: number;
+  maxParticipants?: number;
 }
 
 const LessonSchema: Schema = new Schema({
@@ -25,7 +25,7 @@ const LessonSchema: Schema = new Schema({
   endTime: { type: String },
   type: { type: String },
   students: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  maxPatricipants: { type: Number },
+  maxParticipants: { type: Number },
 });
 
 export const Lesson = mongoose.model<ILesson>("Lesson", LessonSchema);
